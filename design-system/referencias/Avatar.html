@@ -1,0 +1,37 @@
+<!-- @dsCard group="Personas" height=300 width=960 subtitle="Humano: círculo cálido · Agente: cuadrado frío + BOT" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Avatar</title>
+<style>
+  body { background: var(--color-bg-2); padding: var(--space-6); display: grid; gap: var(--space-6); }
+  .row { display: flex; gap: var(--space-6); align-items: center; flex-wrap: wrap; }
+  .row > .rm-label { width: 140px; color: var(--color-text-3); }
+  .cell { display: grid; justify-items: center; gap: 6px; font-size: 11px; color: var(--color-text-3); }
+</style>
+</head>
+<body>
+<div class="row" id="a"><span class="rm-label">Humano vs agente</span></div>
+<div class="row" id="b"><span class="rm-label">Tamaños</span></div>
+<div class="row" id="c"><span class="rm-label">Estados</span></div>
+<script>
+  var R = window.Ramas, P = R.PEOPLE;
+  function cell(html, t) { return '<span class="cell">' + html + t + '</span>'; }
+  document.getElementById('a').insertAdjacentHTML('beforeend',
+    cell(R.avatar('benja', { size: 'lg' }), 'Benja') + cell(R.avatar('tomi', { size: 'lg' }), 'Tomi') +
+    cell(R.avatar('claude', { size: 'lg' }), 'claude') + cell(R.avatar('codex', { size: 'lg' }), 'codex') +
+    '<span style="display:flex;gap:16px;margin-left:16px">' + R.who('benja') + R.who('claude') + '</span>');
+  document.getElementById('b').insertAdjacentHTML('beforeend', ['xs', 'sm', '', 'lg', 'xl'].map(function (s) {
+    return cell('<span style="display:flex;gap:10px">' + R.avatar('tomi', { size: s }) + R.avatar('claude', { size: s }) + '</span>', s || 'md');
+  }).join(''));
+  document.getElementById('c').insertAdjacentHTML('beforeend',
+    cell(R.avatar('claude', { size: 'lg', working: true }), 'trabajando') +
+    cell(R.avatar('benja', { size: 'lg', working: true }), 'trabajando') +
+    cell(R.avatar(null, { size: 'lg' }), 'sin asignar') +
+    cell(R.avatar('benja', { size: 'lg', cls: 'is-focus' }), 'foco') +
+    cell('<span class="rm-avatar-stack">' + R.avatar('benja') + R.avatar('tomi') + R.avatar('claude') + R.avatar('codex') + '</span>', 'grupo') +
+    cell('<span class="rm-avatar rm-avatar--lg" style="opacity:var(--opacity-disabled)">🐼</span>', 'deshabilitado'));
+</script>
+</body>
+</html>

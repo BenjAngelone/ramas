@@ -1,0 +1,32 @@
+<!-- @dsCard group="Navegación" height=150 width=1280 subtitle="Proyecto, tabs, acciones y usuario" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1280"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Barra superior</title>
+<style>
+  body { background: var(--color-bg-1); display: grid; gap: var(--space-4); padding-bottom: var(--space-4); }
+</style>
+</head>
+<body class="rm-gridbg">
+<div id="a"></div>
+<div id="b" style="padding:0 16px;display:flex;gap:12px;align-items:center"><span class="rm-label" style="color:var(--color-text-3)">Grabando →</span></div>
+<script>
+  var R = window.Ramas;
+  function topbar(tab, recording) {
+    return '<header class="rm-topbar">' +
+      '<span class="rm-brand"><svg class="rm-brand__mark" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 11h6M9 11c4 0 4-6 9-6M9 11c4 0 4 6 9 6" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"/><circle cx="3" cy="11" r="2" fill="var(--color-accent)"/><circle cx="18" cy="5" r="1.8" fill="var(--color-status-done)"/><circle cx="18" cy="17" r="1.8" fill="var(--color-status-doing)"/></svg>Ramas<span class="rm-org">TSC</span></span>' +
+      '<button class="rm-project"><span class="rm-project__dot"></span>App Turnos<span class="rm-faint">▾</span></button>' +
+      '<nav class="rm-tabs" role="tablist">' + ['Tablero', 'Flujo', 'Métricas'].map(function (t) { return '<button class="rm-tab' + (t === tab ? ' is-on' : '') + '" role="tab">' + t + '</button>'; }).join('') + '</nav>' +
+      '<span class="rm-topbar__spacer"></span>' +
+      '<span class="rm-inputwrap" style="width:220px"><span class="rm-inputwrap__icon">⌕</span><input class="rm-input" placeholder="Buscar R-42 o texto" style="height:32px"></span>' +
+      '<button class="rm-btn rm-btn--secondary rm-agents-btn"><span class="rm-livedot"></span>Agentes <span class="rm-avatar-stack">' + R.avatar('claude', { size: 'xs' }) + R.avatar('codex', { size: 'xs' }) + '</span></button>' +
+      '<button class="rm-btn rm-btn--secondary">＋ Idea</button>' +
+      '<button class="rm-btn rm-btn--record' + (recording ? ' is-recording' : '') + '">' + (recording ? '<span class="rm-recdot"></span>Grabando 00:42' : '🎙 Idea por audio') + '</button>' +
+      R.avatar('benja', { size: '' }) + '</header>';
+  }
+  document.getElementById('a').innerHTML = topbar('Flujo');
+  document.getElementById('b').insertAdjacentHTML('beforeend', '<div style="flex:1">' + topbar('Tablero', true).replace('rm-topbar"', 'rm-topbar" style="border:1px solid var(--color-border-default);border-radius:14px"') + '</div>');
+</script>
+</body>
+</html>

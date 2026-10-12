@@ -1,0 +1,31 @@
+<!-- @dsCard group="Superficies" height=380 width=960 subtitle="Vidrio denso sobre scrim" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Modal</title>
+<style>
+  body { background: var(--color-bg-1); }
+  .stage { position: relative; height: 380px; overflow: hidden; }
+  .ghost { position: absolute; inset: 0; padding: var(--space-6); display: flex; gap: var(--space-4); }
+  .rm-modal { width: 480px; }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="stage">
+  <div class="ghost" id="bg"></div>
+  <div class="rm-scrim">
+    <div class="rm-modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+      <div class="rm-modal__head"><div><div class="rm-label" style="margin-bottom:4px">Confirmar</div><h2 class="rm-modal__title" id="mt">¿Borrar la rama R-5 y sus 0 hijas?</h2></div><button class="rm-iconbtn" aria-label="Cerrar">×</button></div>
+      <div class="rm-modal__body"><p style="margin:0;color:var(--color-text-2);font-size:14px">“Panel para el negocio” y su bitácora se van a borrar. Los audios de la idea cero no se tocan.</p>
+        <label class="rm-field"><span class="rm-field__label">Escribí R-5 para confirmar</span><input class="rm-input is-focus" value="R-5"></label></div>
+      <div class="rm-modal__foot"><button class="rm-btn rm-btn--ghost">Cancelar</button><button class="rm-btn rm-btn--danger is-hover">Borrar rama</button></div>
+    </div>
+  </div>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('bg').innerHTML = R.card('R-1', { noGlow: true }) + R.card('R-5');
+</script>
+</body>
+</html>

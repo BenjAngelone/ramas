@@ -1,0 +1,20 @@
+<!-- @dsCard group="Métricas" height=200 width=960 subtitle="Valor mono, delta, sparkline, alerta y cargando" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Tarjeta KPI</title>
+<style>
+  body { background: var(--color-bg-1); padding: var(--space-6); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="rm-kpi" style="--_c:var(--color-status-done)"><span class="rm-label">Tareas hechas</span><span class="rm-kpi__value">12</span><span class="rm-kpi__delta is-up">▲ 4 esta semana</span><span class="rm-spark"><i style="--h:.2"></i><i style="--h:.4"></i><i style="--h:.3"></i><i style="--h:.6"></i><i style="--h:.5"></i><i style="--h:.8"></i><i style="--h:1"></i></span></div>
+  <div class="rm-kpi" style="--_c:var(--color-status-doing)"><span class="rm-label">Tiempo trabajado</span><span class="rm-kpi__value">38<small>h</small> 20<small>m</small></span><span class="rm-kpi__delta">promedio 3h 12m / tarea</span></div>
+  <div class="rm-kpi is-alert" style="--_c:var(--color-status-blocked)"><span class="rm-label">Bloqueadas</span><span class="rm-kpi__value">1</span><span class="rm-kpi__delta is-down">▲ 1 desde ayer</span></div>
+  <div class="rm-kpi is-loading" aria-busy="true"><span class="rm-label">Preguntas abiertas</span><span class="rm-kpi__value"><span class="rm-skel" style="height:30px;width:60px"></span></span><span class="rm-skel" style="width:70%"></span></div>
+</div>
+</body>
+</html>

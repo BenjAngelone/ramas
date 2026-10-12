@@ -1,0 +1,27 @@
+<!-- @dsCard group="Etiquetas" height=200 width=960 subtitle="Un color + un glifo por estado" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pill de estado</title>
+<style>
+  body { background: var(--color-bg-2); padding: var(--space-6); display: grid; gap: var(--space-5); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+  .row > .rm-label { width: 140px; color: var(--color-text-3); }
+</style>
+</head>
+<body>
+<div class="row" id="a"><span class="rm-label">Estados</span></div>
+<div class="row" id="b"><span class="rm-label">Editable</span></div>
+<div class="row" id="c"><span class="rm-label">Sobre tarjeta</span></div>
+<script>
+  var R = window.Ramas, S = ['inbox', 'todo', 'doing', 'review', 'done', 'blocked'];
+  document.getElementById('a').insertAdjacentHTML('beforeend', S.map(function (s) { return R.pill(s); }).join(''));
+  document.getElementById('b').insertAdjacentHTML('beforeend',
+    R.pill('doing', { interactive: true }) + R.pill('todo', { interactive: true, cls: 'is-hover' }) + R.pill('review', { interactive: true, cls: 'is-focus' }) +
+    '<span class="rm-pill rm-pill--inbox" style="opacity:var(--opacity-disabled)">Inbox</span>' +
+    '<span class="rm-pill rm-pill--inbox"><span class="rm-spin" style="width:9px;height:9px;border-width:1.5px"></span>Guardando</span>');
+  document.getElementById('c').insertAdjacentHTML('beforeend', S.map(function (s) { return '<span style="background:var(--color-bg-3);padding:8px;border-radius:8px;border:1px solid var(--color-border-default)">' + R.pill(s) + '</span>'; }).join(''));
+</script>
+</body>
+</html>

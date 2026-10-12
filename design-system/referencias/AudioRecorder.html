@@ -1,0 +1,28 @@
+<!-- @dsCard group="Audio" height=300 width=960 subtitle="Grabador flotante: en vivo, pausado y error" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Grabador de audio</title>
+<style>
+  body { background: var(--color-bg-1); padding: var(--space-6); }
+  .row { display: flex; gap: var(--space-6); align-items: flex-start; }
+  .rm-recorder { width: 440px; }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="row" id="root"></div>
+<script>
+  var R = window.Ramas;
+  function rec(state, time, label) {
+    return '<section class="rm-recorder' + (state ? ' is-' + state : '') + '" role="dialog" aria-label="Grabando idea">' +
+      '<div class="rm-recorder__top"><span class="rm-rec">' + label + '</span><span class="rm-id">Nueva idea · App Turnos</span></div>' +
+      '<div style="display:flex;align-items:center;gap:16px"><span class="rm-recorder__timer">' + time + '</span>' + R.wave(48, 23, 0, state ? '' : 'live') + '</div>' +
+      (state === 'error' ? '<div class="rm-card__error">! No tenemos permiso para usar el micrófono.</div>' : '') +
+      '<div class="rm-recorder__foot"><button class="rm-btn rm-btn--ghost">Cancelar</button><span style="display:flex;gap:8px">' +
+      '<button class="rm-btn rm-btn--secondary">' + (state === 'paused' ? '▶ Seguir' : '❚❚ Pausa') + '</button><button class="rm-btn rm-btn--primary"' + (state === 'error' ? ' disabled' : '') + '>✓ Listo</button></span></div></section>';
+  }
+  document.getElementById('root').innerHTML = rec('', '00:42.7', 'REC') + rec('paused', '01:03.2', 'EN PAUSA');
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!-- @dsCard group="Pantallas" page height=900 width=1440 subtitle="Sin login: clave de equipo y “¿Quién sos?” con avatares de animalitos" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Onboarding</title>
+<style>
+  body { background: var(--color-bg-0); }
+  .app { width: 1440px; height: 900px; display: grid; grid-template-columns: 1fr 1fr; }
+  .half { display: grid; place-items: center; position: relative; border-right: 1px solid var(--color-border-subtle); }
+  .step { position: absolute; top: var(--space-6); left: var(--space-8); display: flex; gap: var(--space-2); align-items: center; }
+  .card { width: 460px; display: grid; gap: var(--space-5); padding: var(--space-8); border-radius: var(--radius-xl); background: var(--color-glass-2); -webkit-backdrop-filter: blur(var(--blur-glass-md)); backdrop-filter: blur(var(--blur-glass-md)); border: 1px solid var(--color-border-strong); box-shadow: var(--shadow-3); }
+  .card h1 { margin: 0; font-size: 32px; line-height: 38px; font-weight: 600; letter-spacing: -.02em; }
+  .card p { margin: 0; color: var(--color-text-2); }
+  .brand { display: flex; align-items: center; gap: var(--space-2); font-weight: 700; font-size: 17px; }
+  .brand svg { width: 28px; height: 28px; }
+  .key { font-family: var(--font-mono); letter-spacing: .12em; text-transform: uppercase; height: 48px; font-size: 16px; text-align: center; }
+  .animals { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+  .animals .rm-avatar-pick { padding: var(--space-3) var(--space-1); }
+  .animals .rm-avatar { --_sz: 44px; }
+  .team { display: flex; align-items: center; gap: var(--space-2); font-size: 12px; color: var(--color-text-3); }
+  .dots { display: flex; gap: 6px; } .dots i { width: 18px; height: 3px; border-radius: 2px; background: var(--color-border-strong); } .dots i.on { background: var(--color-accent); box-shadow: 0 0 6px var(--color-glow); }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="app">
+  <div class="half">
+    <div class="step"><div class="dots"><i class="on"></i><i></i></div><span class="rm-label">Paso 1 de 2</span></div>
+    <div class="card">
+      <span class="brand" id="b1"></span>
+      <div><h1>Entrá a TSC</h1><p style="margin-top:8px">No hay cuentas ni contraseñas. Pegá la clave que te pasó alguien del equipo.</p></div>
+      <label class="rm-field"><span class="rm-field__label">Clave de equipo</span><input class="rm-input key is-focus" value="TUR-7F3K-29QA"><span class="rm-field__help">La encontrás en Agentes → Clave del equipo.</span></label>
+      <button class="rm-btn rm-btn--primary rm-btn--lg">Entrar →</button>
+      <label class="rm-field is-error"><span class="rm-field__label">Así se ve el error</span><input class="rm-input key" value="TUR-0000-XXXX"><span class="rm-field__help">Esa clave no existe. Revisá que no falte un guion.</span></label>
+    </div>
+  </div>
+  <div class="half">
+    <div class="step"><div class="dots"><i class="on"></i><i class="on"></i></div><span class="rm-label">Paso 2 de 2</span></div>
+    <div class="card" style="width:520px">
+      <div class="team"><span class="rm-project__dot"></span><b style="color:var(--color-text-1)">TSC</b> · proyecto App Turnos · 2 personas · 2 agentes</div>
+      <div><h1>¿Quién sos?</h1><p style="margin-top:8px">Elegí un animalito y un nombre. Así te van a ver en el tablero y la bitácora.</p></div>
+      <div class="animals" id="animals" role="radiogroup" aria-label="Avatar"></div>
+      <label class="rm-field"><span class="rm-field__label">Tu nombre</span><input class="rm-input" value="Lu"></label>
+      <button class="rm-btn rm-btn--primary rm-btn--lg" id="go"></button>
+    </div>
+  </div>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('b1').innerHTML = R.MARK.replace('rm-brand__mark', '') + 'Ramas<span class="rm-org">TSC</span>';
+  var taken = { '🐥': 'Benja', '🦊': 'Tomi' }, pick = '🐸';
+  document.getElementById('animals').innerHTML = R.ANIMALS.map(function (a, i) {
+    var t = taken[a], cls = t ? ' is-taken' : a === pick ? ' is-on' : i === 5 ? ' is-hover' : '';
+    return '<button class="rm-avatar-pick' + cls + '" role="radio" aria-checked="' + (a === pick) + '"' + (t ? ' disabled' : '') + '><span class="rm-avatar">' + a + '</span>' + (t ? t : a === pick ? 'Elegido' : '&nbsp;') + '</button>';
+  }).join('');
+  document.getElementById('go').innerHTML = 'Entrar como <span class="rm-avatar rm-avatar--xs" style="box-shadow:none;background:none">' + pick + '</span> Lu';
+</script>
+</body>
+</html>

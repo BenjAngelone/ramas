@@ -1,0 +1,18 @@
+<!-- @dsCard group="Etiquetas" height=120 width=960 subtitle="Tipos de entrada de bitácora" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Etiqueta de bitácora</title>
+<style>
+  body { background: var(--color-bg-2); padding: var(--space-6); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+</style>
+</head>
+<body>
+<div id="a" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('a').innerHTML = ['summary', 'decision', 'question', 'blocker', 'note', 'commit'].map(R.logtag).join('');
+</script>
+</body>
+</html>

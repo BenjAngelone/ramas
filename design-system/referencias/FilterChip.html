@@ -1,0 +1,30 @@
+<!-- @dsCard group="Controles" height=170 width=960 subtitle="Por persona, por tipo, ocultar hechas" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Chips de filtro</title>
+<style>
+  body { background: var(--color-bg-2); padding: var(--space-6); display: grid; gap: var(--space-4); }
+  .row { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
+  .row > .rm-label { width: 120px; color: var(--color-text-3); }
+</style>
+</head>
+<body>
+<div class="row" id="a"><span class="rm-label">Persona</span></div>
+<div class="row"><span class="rm-label">Estados</span>
+  <button class="rm-chip">Default</button><button class="rm-chip is-hover">Hover</button><button class="rm-chip is-on">Activo<span class="rm-chip__n">4</span></button><button class="rm-chip is-focus">Foco</button><button class="rm-chip" disabled>Deshabilitado</button>
+  <button class="rm-chip"><span class="rm-spin" style="width:10px;height:10px;border-width:1.5px"></span>Cargando</button>
+  <span class="rm-filters__sep"></span><span class="rm-switch is-on"><span class="rm-switch__t"></span>Ocultar hechas</span><span class="rm-switch"><span class="rm-switch__t"></span>Solo mías</span>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('a').insertAdjacentHTML('beforeend',
+    '<button class="rm-chip is-on">' + R.avatar('benja', { size: 'xs' }) + 'Benja<span class="rm-chip__n">2</span></button>' +
+    '<button class="rm-chip">' + R.avatar('tomi', { size: 'xs' }) + 'Tomi<span class="rm-chip__n">1</span></button>' +
+    '<button class="rm-chip">' + R.avatar('claude', { size: 'xs' }) + 'claude<span class="rm-chip__n">3</span></button>' +
+    '<button class="rm-chip">' + R.avatar('codex', { size: 'xs' }) + 'codex<span class="rm-chip__n">1</span></button>' +
+    '<span class="rm-filters__sep"></span><button class="rm-chip is-on">Ideas</button><button class="rm-chip">Tareas</button><button class="rm-chip">Con preguntas ❓</button>');
+</script>
+</body>
+</html>

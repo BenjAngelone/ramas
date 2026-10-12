@@ -1,0 +1,92 @@
+<!-- @dsCard group="Pantallas" page height=980 width=1440 subtitle="Mobile: tablero, detalle y Flujo como árbol vertical" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Mobile</title>
+<style>
+  body { background: var(--color-bg-0); }
+  .stage { width: 1440px; min-height: 980px; display: flex; justify-content: center; gap: 56px; padding: var(--space-8) 0; }
+  .col { display: grid; gap: var(--space-3); justify-items: center; align-content: start; }
+  .phone { width: 390px; height: 844px; border-radius: 48px; border: 1px solid var(--color-border-strong); background: var(--color-bg-1); overflow: hidden; position: relative; box-shadow: var(--shadow-3), 0 0 0 6px #0a1217; display: flex; flex-direction: column; }
+  .status { height: 44px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0 28px; font-family: var(--font-mono); font-size: 12px; color: var(--color-text-1); }
+  .mhead { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); flex: none; }
+  .mhead .rm-project { flex: 1; justify-content: flex-start; }
+  .mtabs { padding: 0 var(--space-4) var(--space-2); flex: none; }
+  .mtabs .rm-tabs { width: 100%; } .mtabs .rm-tab { flex: 1; justify-content: center; }
+  .statusrow { display: flex; gap: var(--space-2); overflow: hidden; padding: var(--space-2) var(--space-4); flex: none; border-bottom: 1px solid var(--color-border-subtle); }
+  .stab { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--space-3); border-radius: var(--radius-pill); border: 1px solid var(--color-border-default); white-space: nowrap; font-size: 12px; color: var(--color-text-2); flex: none; }
+  .stab.is-on { border-color: var(--color-status-doing); background: var(--color-status-doing-soft); color: var(--color-status-doing); }
+  .stab .rm-mono { color: var(--color-text-3); }
+  .list { flex: 1; overflow: hidden; padding: var(--space-3) var(--space-4); display: grid; gap: var(--space-2); align-content: start; }
+  .tabbar { flex: none; height: 84px; display: flex; align-items: flex-start; justify-content: space-around; padding-top: 10px; border-top: 1px solid var(--color-border-default); background: var(--color-glass-2); -webkit-backdrop-filter: blur(var(--blur-glass-md)); backdrop-filter: blur(var(--blur-glass-md)); }
+  .tabbar span { display: grid; justify-items: center; gap: 2px; font-size: 10px; color: var(--color-text-3); width: 64px; }
+  .tabbar span.on { color: var(--color-accent); }
+  .tabbar i { font-style: normal; font-size: 18px; }
+  .fab { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--color-record); color: var(--color-on-record); font-size: 22px; margin-top: -26px; box-shadow: var(--glow-record); border: 3px solid var(--color-bg-1); }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; top: 96px; background: var(--color-bg-2); border-top-left-radius: 24px; border-top-right-radius: 24px; border-top: 1px solid var(--color-border-strong); box-shadow: var(--shadow-3); padding: var(--space-2) var(--space-4) var(--space-4); display: grid; gap: var(--space-4); align-content: start; overflow: hidden; }
+  .grab { width: 40px; height: 4px; border-radius: 2px; background: var(--color-border-control); margin: 4px auto 0; }
+  .dimbg { position: absolute; inset: 44px 0 0; background: var(--color-scrim); }
+  .props2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .prop { padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--color-bg-3); border: 1px solid var(--color-border-subtle); display: grid; gap: 6px; }
+  .prop .rm-label { font-size: 10px; color: var(--color-text-3); }
+  .tree { position: relative; flex: 1; overflow: hidden; padding: var(--space-3) var(--space-4); }
+  .tree svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+  .tnode { position: absolute; }
+  .rm-card--compact .rm-card__title { font-size: 13px; line-height: 18px; }
+  .rm-card--compact .rm-card__foot { padding-top: 6px; }
+  .caption { font-size: 12px; color: var(--color-text-2); }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="stage">
+  <div class="col"><span class="rm-label">Tablero</span><div class="phone" id="p1"></div></div>
+  <div class="col"><span class="rm-label">Detalle</span><div class="phone" id="p2"></div></div>
+  <div class="col"><span class="rm-label">Flujo · árbol vertical</span><div class="phone" id="p3"></div></div>
+</div>
+<script>
+  var R = window.Ramas;
+  var status = '<div class="status"><span>9:41</span><span>●●● ▮</span></div>';
+  var head = function (tab) {
+    return '<div class="mhead">' + R.MARK.replace('rm-brand__mark', 'rm-brand__mark" style="width:24px;height:24px') + '<button class="rm-project"><span class="rm-project__dot"></span>App Turnos<span class="rm-faint">▾</span></button>' + R.avatar('benja') + '</div>' +
+      '<div class="mtabs"><nav class="rm-tabs">' + ['Tablero', 'Flujo', 'Métricas'].map(function (t) { return '<button class="rm-tab' + (t === tab ? ' is-on' : '') + '">' + t + '</button>'; }).join('') + '</nav></div>';
+  };
+  var tabbar = '<nav class="tabbar"><span class="on"><i>▦</i>Tablero</span><span><i>⑂</i>Flujo</span><span><b class="fab" aria-label="Idea por audio">🎙</b></span><span><i>▥</i>Métricas</span><span><i>🤖</i>Agentes</span></nav>';
+
+  /* 1 · Tablero: una columna por vez, tabs de estado */
+  var counts = { inbox: 0, todo: 3, doing: 2, review: 1, done: 1, blocked: 0 };
+  document.getElementById('p1').innerHTML = status + head('Tablero') +
+    '<div class="statusrow">' + Object.keys(counts).map(function (s) { return '<span class="stab' + (s === 'doing' ? ' is-on' : '') + '">' + R.STATUS[s] + ' <span class="rm-mono">' + counts[s] + '</span></span>'; }).join('') + '</div>' +
+    '<div class="list">' + R.card('R-1', { compact: true, noGlow: true }) + R.card('R-3', { compact: true, cls: 'is-selected' }) + '<button class="rm-quickadd">＋ Agregar en Haciendo</button></div>' + tabbar;
+
+  /* 2 · Detalle: bottom sheet */
+  document.getElementById('p2').innerHTML = status + head('Tablero') + '<div class="dimbg"></div>' +
+    '<div class="sheet"><div class="grab"></div>' +
+    '<div><nav class="rm-crumbs"><a href="#"><span class="rm-idea-tag">◉</span> R-1</a><span class="rm-crumbs__sep">/</span><span class="rm-id">R-3</span></nav><h1 class="rm-title-edit" style="font-size:20px;line-height:26px;margin-top:4px">Modelo de turnos y disponibilidad</h1></div>' +
+    '<div class="props2"><div class="prop"><span class="rm-label">Estado</span>' + R.pill('doing', { interactive: true }) + '</div><div class="prop"><span class="rm-label">Prioridad</span>' + R.prio('urgent') + '</div><div class="prop"><span class="rm-label">Responsable</span>' + R.who('claude') + '</div><div class="prop"><span class="rm-label">Tiempo</span><span class="rm-mono" style="font-size:13px">6h 40m</span></div></div>' +
+    '<div class="rm-audio" style="grid-template-columns:36px 1fr"><button class="rm-audio__play" aria-label="Reproducir">▶</button><div class="rm-audio__mid"><div class="rm-audio__top"><b>nota-benja-feriados.m4a</b><span class="rm-audio__time">00:38</span></div>' + R.wave(40, 31, 0) + '</div></div>' +
+    '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Ramas · 1/2</span></div><div class="rm-branches">' + ['R-6', 'R-7'].map(function (id) { var n = R.byId(id); return '<div class="rm-branch" style="grid-template-columns:14px auto 1fr auto"><span class="rm-branch__line"></span><span class="rm-id">' + id + '</span><span>' + n.title + '</span>' + R.pill(n.status) + '</div>'; }).join('') + '</div></section>' +
+    '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Bitácora</span><span class="rm-faint" style="font-size:12px">5</span></div><div class="rm-log"><div class="rm-log__item rm-log__item--agent rm-log__item--question">' + R.avatar('claude') + '<div><div class="rm-log__meta"><span class="rm-log__author">claude</span>' + R.logtag('question') + '</div><div class="rm-log__box rm-log__body">¿Los turnos se pueden superponer si hay más de un profesional?<div class="rm-log__actions"><button class="rm-btn rm-btn--primary rm-btn--sm">✓ Resolver</button></div></div></div></div></div></section></div>';
+
+  /* 3 · Flujo vertical */
+  var order = [['R-1', 0], ['R-2', 1], ['R-3', 1], ['R-6', 2], ['R-7', 2], ['R-4', 1], ['R-5', 1]];
+  document.getElementById('p3').innerHTML = status + head('Flujo') + '<div class="tree" id="tree"><svg id="tsvg"></svg></div>' +
+    '<div style="position:absolute;right:16px;bottom:100px;display:flex;gap:8px"><button class="rm-btn rm-btn--secondary rm-btn--sm">⌖ Centrar en esta idea</button></div>' + tabbar.replace('<span class="on"><i>▦</i>', '<span><i>▦</i>').replace('<span><i>⑂</i>', '<span class="on"><i>⑂</i>');
+  var tree = document.getElementById('tree'), y = 12, pos = {}, path = { 'R-1': 1, 'R-3': 1, 'R-6': 1, 'R-7': 1 };
+  order.forEach(function (o) {
+    var x = 16 + o[1] * 26, d = document.createElement('div'); d.className = 'tnode'; d.style.left = x + 'px'; d.style.top = y + 'px'; d.style.width = (358 - o[1] * 26) + 'px';
+    d.innerHTML = R.card(o[0], { compact: true, noGlow: o[0] !== 'R-3', cls: o[0] === 'R-3' ? 'is-selected' : path[o[0]] ? 'is-path' : 'is-dimmed', branches: o[0] === 'R-1' ? [0, 4] : undefined });
+    tree.appendChild(d); pos[o[0]] = [x, y, d.offsetHeight]; y += d.offsetHeight + 14;
+  });
+  var s = R.arrowDefs('mv');
+  order.forEach(function (o) {
+    var n = R.byId(o[0]); if (!n.parent) return;
+    var p = pos[n.parent], c = pos[o[0]], on = path[n.parent] && path[o[0]];
+    var x1 = p[0] + 12, y1 = p[1] + p[2], x2 = c[0] - 2, y2 = c[1] + 22;
+    var d = 'M' + x1 + ',' + y1 + ' C' + x1 + ',' + (y2) + ' ' + (x1 + 2) + ',' + y2 + ' ' + x2 + ',' + y2;
+    s += R.edge(d, R.edgeKind(n.status), { prefix: 'mv', path: on, dimmed: !on });
+  });
+  document.getElementById('tsvg').innerHTML = s;
+</script>
+</body>
+</html>

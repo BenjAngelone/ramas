@@ -1,0 +1,16 @@
+/* Ramas — extensiones rm-* de board. Solo var(--*) del design system. Documentar cada clase nueva en docs/ramas/02-informe.md */
+.rm-board { --board-col-w: calc(var(--space-16) * 3.5); grid-auto-columns: var(--board-col-w); overflow-x: auto; min-height: 70vh; }
+.rm-board-hint {
+  position: fixed; left: 50%; bottom: var(--space-5); transform: translateX(-50%); z-index: 4; pointer-events: none;
+  display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill); background: var(--color-glass-3); border: 1px solid var(--color-border-glow);
+  font-size: var(--text-caption-size); line-height: var(--text-caption-line); color: var(--color-text-2); white-space: nowrap;
+}
+.rm-board-hint b { color: var(--color-text-1); }
+.rm-board-hint[hidden] { display: none; }
+.rm-board > .rm-board-edges { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; z-index: 3; }
+.rm-board .rm-card { cursor: pointer; }
+.rm-board .rm-card.is-dragging { opacity: var(--opacity-dimmed); }
+.rm-col input.rm-quickadd { font-family: inherit; outline: none; }
+.rm-col input.rm-quickadd:focus { border-style: solid; border-color: var(--color-accent); color: var(--color-text-1); box-shadow: 0 0 0 3px var(--color-accent-soft); }
+.rm-col input.rm-quickadd::placeholder { color: var(--color-text-3); }

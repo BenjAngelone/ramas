@@ -1,0 +1,52 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Ramas</title>
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--color-bg-1); color: var(--color-text-1); font-family: var(--font-sans); overflow: hidden; }
+  .cover { position: relative; height: 288px; width: 960px; overflow: hidden; }
+  .art { position: absolute; top: 0; left: 480px; width: 480px; height: 288px; overflow: hidden; }
+  .art svg { display: block; }
+  .accent { fill: var(--color-accent); }
+  .doing { fill: var(--color-status-doing); }
+  .done { fill: var(--color-status-done); }
+  .review { fill: var(--color-status-review); }
+  .deep { fill: var(--color-bg-4); }
+  .cut { fill: var(--color-bg-1); }
+  .blk { rx: var(--radius-md); }
+  .tag { rx: var(--radius-xs); }
+  .words { position: absolute; left: var(--space-8); bottom: var(--space-8); max-width: 440px; }
+  .name { margin: 0; font-size: 120px; line-height: .92; font-weight: 600; letter-spacing: -.03em; color: var(--color-text-1); }
+  .tagline { margin: var(--space-3) 0 0 6px; font-size: 14px; line-height: 20px; color: var(--color-text-2); }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="art" aria-hidden="true">
+    <svg viewBox="0 0 480 288" width="480" height="288">
+      <!--
+        blocks      color-accent 96×208 slab bled off the top (la idea cero, el primario) · color-status-doing 128×72 · color-status-done 160×56 bled off the right · color-bg-4 192×128 deep surface bled right · color-status-review 64×24 once (solo señal) — ≈40% de 960×288
+        arrangement una losa alta con satélites escalonados a la derecha, como una idea que se abre en ramas; gutters space-8, bordes en múltiplos de space-2
+        pattern     grilla de puntos a paso space-6 recortada en la superficie profunda, de "precisa, técnica, mono, grilla de 4px" (consola de misión)
+        scales      lados en múltiplos de space-2; gutters space-8; paso space-6; esquinas radius-md, etiqueta radius-xs
+      -->
+      <rect class="accent blk" x="24" y="-16" width="96" height="208" rx="10"/>
+      <rect class="doing blk" x="152" y="56" width="128" height="72" rx="10"/>
+      <rect class="review tag" x="152" y="160" width="64" height="24" rx="4"/>
+      <rect class="done blk" x="312" y="16" width="184" height="56" rx="10"/>
+      <rect class="deep blk" x="312" y="104" width="184" height="152" rx="10"/>
+      <g class="cut" id="dots"></g>
+    </svg>
+  </div>
+  <div class="words"><h1 class="name">Ramas</h1><p class="tagline">TSC · El camino de cada idea, del audio a la feature terminada.</p></div>
+</div>
+<script>
+  var g = document.getElementById('dots'), s = '';
+  for (var y = 128; y <= 232; y += 24) for (var x = 336; x <= 480; x += 24) s += '<circle cx="' + x + '" cy="' + y + '" r="2.5"/>';
+  g.innerHTML = s;
+</script>
+</body>
+</html>

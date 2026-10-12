@@ -1,0 +1,37 @@
+<!-- @dsCard group="Pantallas" page height=900 width=1440 subtitle="“Idea por audio”: grabador flotante en vivo sobre el tablero" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Grabador</title>
+<style>
+  body { background: var(--color-bg-0); }
+  .app { width: 1440px; height: 900px; display: grid; grid-template-rows: 56px 1fr; position: relative; overflow: hidden; }
+  .ghost { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-6); opacity: .35; filter: saturate(.6); }
+  .float { position: absolute; left: 50%; bottom: var(--space-8); transform: translateX(-50%); display: grid; gap: var(--space-3); justify-items: center; z-index: 5; }
+  .rm-recorder { width: 520px; }
+  .tip { font-size: 12px; color: var(--color-text-2); display: flex; gap: var(--space-2); align-items: center; }
+  .dest { display: flex; align-items: center; gap: var(--space-2); font-size: 12px; color: var(--color-text-2); padding-top: var(--space-3); border-top: 1px solid var(--color-border-subtle); }
+</style>
+</head>
+<body>
+<div class="app rm-gridbg">
+  <div id="top"></div>
+  <div class="ghost" id="ghost"></div>
+  <div class="float">
+    <section class="rm-recorder" role="dialog" aria-label="Grabando idea por audio" id="rec"></section>
+    <span class="tip"><span class="rm-kbd">Esc</span> cancelar · <span class="rm-kbd">Espacio</span> pausa · <span class="rm-kbd">↵</span> listo</span>
+  </div>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('top').innerHTML = R.topbar('Tablero', { recording: '00:42' });
+  document.getElementById('ghost').innerHTML = R.card('R-4') + R.card('R-1', { noGlow: true }) + R.card('R-2') + R.card('R-6');
+  document.getElementById('rec').innerHTML =
+    '<div class="rm-recorder__top"><span class="rm-rec">REC</span><span style="display:flex;gap:8px;align-items:center">' + R.avatar('benja', { size: 'sm' }) + '<span style="font-size:12px;color:var(--color-text-2)">Benja</span></span></div>' +
+    '<div style="display:flex;align-items:center;gap:20px"><span class="rm-recorder__timer">00:42.7</span>' + R.wave(64, 41, 0, 'live') + '</div>' +
+    '<div class="dest">Se crea como <b style="color:var(--color-text-1)">nueva idea cero</b> en ' + R.pill('inbox') + '<span style="margin-left:auto" class="rm-switch is-on"><span class="rm-switch__t"></span>Transcribir</span></div>' +
+    '<div class="rm-recorder__foot"><button class="rm-btn rm-btn--ghost">Cancelar</button><span style="display:flex;gap:8px"><button class="rm-btn rm-btn--secondary">❚❚ Pausa</button><button class="rm-btn rm-btn--primary">✓ Listo</button></span></div>';
+</script>
+</body>
+</html>

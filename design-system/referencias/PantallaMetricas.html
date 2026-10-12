@@ -1,0 +1,74 @@
+<!-- @dsCard group="Pantallas" page height=1000 width=1440 subtitle="KPIs, ideas y sus ramas, quién hizo qué y lo que más tiempo llevó" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Métricas</title>
+<style>
+  body { background: var(--color-bg-0); }
+  .app { width: 1440px; min-height: 1000px; display: grid; grid-template-rows: 56px 1fr; }
+  main { padding: var(--space-6) var(--space-8); display: grid; gap: var(--space-6); align-content: start; }
+  .head { display: flex; align-items: flex-end; justify-content: space-between; }
+  .head h1 { margin: 4px 0 0; font-size: 22px; line-height: 28px; font-weight: 600; }
+  .kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-3); }
+  .two { display: grid; grid-template-columns: 1.45fr 1fr; gap: var(--space-4); align-items: start; }
+  .box { background: var(--color-bg-2); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); display: grid; gap: var(--space-3); }
+  .box h2 { margin: 0; font-size: 17px; line-height: 24px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+  .person { display: grid; grid-template-columns: 180px 1fr 72px; gap: var(--space-3); align-items: center; padding: 10px 0; border-bottom: 1px solid var(--color-border-subtle); }
+  .person:last-child { border-bottom: 0; }
+  .stats { display: flex; gap: var(--space-3); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-2); }
+  .stats b { color: var(--color-text-1); font-weight: 500; }
+  .rank { display: grid; grid-template-columns: 24px 44px 1fr 260px 70px; gap: var(--space-3); align-items: center; padding: 8px 0; font-size: 13px; }
+  .rank .n { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-3); }
+  .rank .t { font-family: var(--font-mono); font-size: 12px; text-align: right; }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="app">
+  <div id="top"></div>
+  <main>
+    <div class="head"><div><span class="rm-label">// App Turnos</span><h1>Métricas</h1></div><div class="rm-seg"><button>7 días</button><button class="is-on">30 días</button><button>Todo</button></div></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="two">
+      <section class="box"><h2>Ideas y sus ramas <span class="rm-faint" style="font-size:12px;font-weight:400">2 ideas · 8 nodos</span></h2><table class="rm-table" id="ideas"></table></section>
+      <section class="box"><h2>Quién hizo qué <span class="rm-seg"><button class="is-on">Tiempo</button><button>Hechas</button></span></h2><div id="people"></div></section>
+    </div>
+    <section class="box"><h2>Lo que más tiempo llevó <span class="rm-faint" style="font-size:12px;font-weight:400">tiempo propio del nodo, sin sumar ramas</span></h2><div id="rank"></div></section>
+  </main>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('top').innerHTML = R.topbar('Métricas');
+  var K = [
+    ['Tareas hechas', '1', '--color-status-done', 'R-6 · ayer', ''],
+    ['En curso', '2', '--color-status-doing', 'R-3 haciendo · R-2 en revisión', ''],
+    ['Tiempo trabajado', '10<small>h</small> 40<small>m</small>', '--color-accent', '▲ 4h 05m vs. semana pasada', 'is-up'],
+    ['Promedio por tarea', '2<small>h</small> 40<small>m</small>', '--color-status-review', 'sobre 4 nodos con tiempo', ''],
+    ['Preguntas abiertas', '1', '--color-status-doing', 'claude en R-3', ''],
+    ['Bloqueadas', '0', '--color-status-blocked', 'nada trabado', '']
+  ];
+  document.getElementById('kpis').innerHTML = K.map(function (k) { return '<div class="rm-kpi" style="--_c:var(' + k[2] + ')"><span class="rm-label">' + k[0] + '</span><span class="rm-kpi__value">' + k[1] + '</span><span class="rm-kpi__delta ' + k[4] + '">' + k[3] + '</span></div>'; }).join('');
+
+  function prog(done, doing, total) {
+    var p = total ? Math.round(done / total * 100) : 0;
+    return '<div class="rm-progress"><div class="rm-progress__track">' + (total ? '<span class="rm-progress__seg rm-progress__seg--done" style="width:' + done / total * 100 + '%"></span><span class="rm-progress__seg rm-progress__seg--doing" style="width:' + doing / total * 100 + '%"></span>' : '') + '</div><div class="rm-progress__meta"><span>' + (total ? p + '%' : 'sin ramas') + '</span><span>' + done + '/' + total + '</span></div></div>';
+  }
+  document.getElementById('ideas').innerHTML = '<thead><tr><th>Idea</th><th>Origen</th><th>Ramas</th><th style="width:190px">Avance</th><th class="num is-sorted">Tiempo</th></tr></thead><tbody>' +
+    '<tr class="is-selected"><td><span class="rm-id">R-1</span>&nbsp; Reservas de turnos por WhatsApp</td><td>' + R.avatar('tomi', { size: 'xs' }) + ' 🎙 02:14</td><td class="rm-mono">6 <span class="rm-faint">(2 niveles)</span></td><td>' + prog(1, 2, 6) + '</td><td class="num">10h 40m</td></tr>' +
+    '<tr><td style="padding-left:28px;color:var(--color-text-2)"><span class="rm-id">R-3</span>&nbsp; Modelo de turnos y disponibilidad</td><td></td><td class="rm-mono">2</td><td>' + prog(1, 0, 2) + '</td><td class="num">6h 40m</td></tr>' +
+    '<tr><td><span class="rm-id">R-8</span>&nbsp; Cobro de seña con Mercado Pago</td><td>' + R.avatar('benja', { size: 'xs' }) + ' 🎙 01:02</td><td class="rm-mono">5</td><td>' + prog(0, 0, 5) + '</td><td class="num">—</td></tr></tbody>';
+
+  var P = [['claude', 1, 1, '6h 40m', 3, .62], ['benja', 0, 1, '3h 20m', 1, .31], ['tomi', 0, 0, '0h 40m', 1, .07], ['codex', 0, 0, '—', 0, 0]];
+  document.getElementById('people').innerHTML = P.map(function (p) {
+    return '<div class="person">' + R.who(p[0], { size: '' }) + '<div style="display:grid;gap:6px"><div class="stats"><span><b>' + p[1] + '</b> hechas</span><span><b>' + p[2] + '</b> en curso</span><span><b>' + p[4] + '</b> en bitácora</span></div>' +
+      '<div class="rm-bar" style="--_c:var(' + (R.PEOPLE[p[0]].agent ? '--color-agent' : '--color-human') + ')"><i style="width:' + p[5] * 100 + '%"></i></div></div><span class="rm-mono" style="text-align:right;font-size:12px;color:' + (p[5] ? 'var(--color-text-1)' : 'var(--color-text-3)') + '">' + p[3] + '</span></div>';
+  }).join('') + '<p class="rm-faint" style="margin:4px 0 0;font-size:12px">codex no registró actividad en este período.</p>';
+
+  var T = [['R-3', 'Modelo de turnos y disponibilidad', 'claude', 'doing', 265], ['R-2', 'Webhook de WhatsApp Cloud API', 'benja', 'review', 200], ['R-6', 'Tabla de slots', 'claude', 'done', 135], ['R-1', 'Reservas de turnos por WhatsApp', 'tomi', 'doing', 40]];
+  document.getElementById('rank').innerHTML = T.map(function (t, i) {
+    var c = t[3] === 'done' ? '--color-status-done' : t[3] === 'review' ? '--color-status-review' : '--color-status-doing';
+    return '<div class="rank"><span class="n">0' + (i + 1) + '</span><span class="rm-id">' + t[0] + '</span><span style="display:flex;gap:10px;align-items:center">' + R.avatar(t[2], { size: 'xs' }) + t[1] + ' ' + R.pill(t[3]) + '</span><div class="rm-bar" style="--_c:var(' + c + ')"><i style="width:' + t[4] / 265 * 100 + '%"></i></div><span class="t">' + Math.floor(t[4] / 60) + 'h ' + ('0' + t[4] % 60).slice(-2) + 'm</span></div>';
+  }).join('');
+</script>
+</body>
+</html>

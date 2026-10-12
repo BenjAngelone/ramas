@@ -1,0 +1,26 @@
+/* Ramas — extensiones del design system (prefijo rm-). Solo var(--token). */
+
+.rm-app body,
+body.rm-app {
+  background: var(--color-bg-0);
+  color: var(--color-text-1);
+}
+
+.rm-logo {
+  display: inline-block;
+  height: var(--space-6);
+  width: auto;
+  vertical-align: middle;
+}
+
+/* Foco visible global (WCAG 2.4.7): los controles cuyo estado propio (glow, sombra inset, outline:none, borde de campo)
+   pisa el anillo de ramas-components.css reciben un outline con --color-focus. El outline no toca box-shadow,
+   así que conserva el glow del estado. `:root` sube la especificidad sin !important; no rompe .rm-project:focus-within. */
+:root :is(
+  .rm-card, .rm-tab, .rm-stab, .rm-quickadd, .rm-minimap, .rm-btn--record,
+  .rm-input, .rm-select, .rm-textarea, .rm-title-edit,
+  tr.rm-metrics__row, .rm-metrics__scroll, summary, [tabindex]:not([tabindex="-1"])
+):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}

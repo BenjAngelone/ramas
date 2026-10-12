@@ -1,0 +1,64 @@
+<!-- @dsCard group="Pantallas" page height=900 width=1440 subtitle="Modal “Conectar agentes” con bloques de código copiables" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Conectar agentes</title>
+<style>
+  body { background: var(--color-bg-0); }
+  .app { width: 1440px; height: 900px; display: grid; grid-template-rows: 56px 1fr; position: relative; overflow: hidden; }
+  .ghost { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); }
+  .rm-scrim { z-index: 5; }
+  .rm-modal { width: 720px; }
+  .agents { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .agent { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-3); align-items: center; padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--color-border-default); background: var(--color-bg-3); cursor: pointer; }
+  .agent.is-on { border-color: var(--color-accent); box-shadow: var(--glow-accent); }
+  .agent small { display: block; font-size: 12px; color: var(--color-text-3); }
+  .live { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .live.on { color: var(--color-status-done); } .live.on::before { box-shadow: 0 0 6px currentColor; }
+  .live.off { color: var(--color-text-3); } .live.off::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
+  .stepn { display: flex; gap: var(--space-2); align-items: baseline; font-size: 13px; color: var(--color-text-2); margin-bottom: var(--space-2); }
+  .stepn b { font-family: var(--font-mono); font-size: 11px; color: var(--color-accent); }
+  .stepn strong { color: var(--color-text-1); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="app rm-gridbg">
+  <div id="top"></div>
+  <div class="ghost" id="ghost"></div>
+  <div class="rm-scrim">
+    <div class="rm-modal" role="dialog" aria-modal="true" aria-labelledby="t">
+      <div class="rm-modal__head"><div><span class="rm-label">// Agentes</span><h2 class="rm-modal__title" id="t" style="margin-top:4px">Conectar agentes</h2><p style="margin:4px 0 0;font-size:13px;color:var(--color-text-2)">Los agentes leen nodos, escriben en la bitácora y mueven estados como cualquiera del equipo.</p></div><button class="rm-iconbtn" aria-label="Cerrar">×</button></div>
+      <div class="rm-modal__body">
+        <div class="agents" id="agents"></div>
+        <div><div class="stepn"><b>01</b><strong>Variables de entorno</strong> en la máquina donde corre claude</div>
+          <div class="rm-code"><div class="rm-code__bar"><span class="rm-id">bash</span><button class="rm-btn rm-btn--ghost rm-btn--sm">⧉ Copiar</button></div><pre><span class="k">export</span> RAMAS_URL=<span class="s">"https://ramas.tu-equipo.dev"</span>
+<span class="k">export</span> RAMAS_TEAM_KEY=<span class="s">"TUR-7F3K-29QA"</span>
+<span class="k">export</span> RAMAS_AGENT=<span class="s">"claude"</span></pre></div></div>
+        <div><div class="stepn"><b>02</b><strong>Configuración MCP</strong> (.mcp.json)</div>
+          <div class="rm-code is-copied"><div class="rm-code__bar"><span class="rm-id">json</span><button class="rm-btn rm-btn--ghost rm-btn--sm">✓ Copiado</button></div><pre>{
+  <span class="s">"mcpServers"</span>: {
+    <span class="s">"ramas"</span>: { <span class="s">"command"</span>: <span class="s">"npx"</span>, <span class="s">"args"</span>: [<span class="s">"ramas-mcp"</span>] }
+  }
+}</pre></div></div>
+        <div><div class="stepn"><b>03</b><strong>Instrucción para el agente</strong> <span class="rm-faint">(pegala en CLAUDE.md / AGENTS.md)</span></div>
+          <div class="rm-code"><div class="rm-code__bar"><span class="rm-id">markdown</span><button class="rm-btn rm-btn--ghost rm-btn--sm">⧉ Copiar</button></div><pre><span class="c"># Ramas</span>
+Antes de empezar, leé el nodo con ramas.get(<span class="s">"R-42"</span>).
+Al terminar dejá un <span class="k">Resumen</span>; si dudás, una <span class="k">Pregunta abierta</span>;
+por cada commit, una entrada <span class="k">Commit</span> con el hash.</pre></div></div>
+      </div>
+      <div class="rm-modal__foot"><span class="rm-faint" style="font-size:12px;margin-right:auto;align-self:center">Valores de ejemplo: reemplazalos por los de tu instalación.</span><button class="rm-btn rm-btn--ghost">Cerrar</button><button class="rm-btn rm-btn--primary">Probar conexión</button></div>
+    </div>
+  </div>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('top').innerHTML = R.topbar('Tablero');
+  document.getElementById('ghost').innerHTML = R.card('R-4') + R.card('R-3') + R.card('R-2') + R.card('R-6');
+  document.getElementById('agents').innerHTML =
+    '<div class="agent is-on">' + R.avatar('claude', { size: 'lg', working: true }) + '<div><span class="rm-who__name--agent" style="font-size:14px">claude</span><small>Trabajando en R-3 · visto hace 2 min</small></div><span class="live on">En línea</span></div>' +
+    '<div class="agent">' + R.avatar('codex', { size: 'lg' }) + '<div><span class="rm-who__name--agent" style="font-size:14px">codex</span><small>Nunca se conectó</small></div><span class="live off">Sin conectar</span></div>';
+</script>
+</body>
+</html>

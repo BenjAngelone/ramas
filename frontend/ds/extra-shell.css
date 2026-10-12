@@ -1,0 +1,33 @@
+/* Ramas — extensiones rm-* de shell. Solo var(--*) del design system. Documentar cada clase nueva en docs/ramas/02-informe.md */
+
+/* rm-filters: fila de chips bajo la barra superior (reemplaza .filters viejo) */
+.rm-filters:empty { display: none; }
+/* rm-filters__group: grupo de chips (nivel / responsable) */
+.rm-filters__group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+/* rm-toasts: contenedor fijo de toasts */
+.rm-toasts { position: fixed; right: var(--space-4); bottom: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); z-index: 80; max-width: calc(100vw - 2 * var(--space-4)); }
+.rm-toasts .rm-toast { max-width: 100%; }
+/* vida del toast: múltiplos de --dur-slow (JS la lee de --rm-toast-life) */
+.rm-toast { --rm-toast-life: calc(var(--dur-slow) * 7); }
+.rm-toast--error { --rm-toast-life: calc(var(--dur-slow) * 13); }
+.rm-toast::after { animation-duration: var(--rm-toast-life); }
+/* rm-project__sel: <select> nativo sin cromo dentro de .rm-project */
+.rm-project { position: relative; }
+.rm-project__sel { field-sizing: content; appearance: none; -webkit-appearance: none; background: transparent; border: 0; color: inherit; font: inherit; font-weight: 600; cursor: pointer; max-width: calc(var(--space-12) * 4 + var(--space-2)); padding: 0; outline: none; text-overflow: ellipsis; }
+.rm-project__sel option { background: var(--color-bg-2); color: var(--color-text-1); }
+.rm-project:focus-within { box-shadow: var(--ring-focus); }
+/* rm-me: botón de avatar propio */
+.rm-me { cursor: pointer; border: 0; padding: 0; color: inherit; }
+.rm-me:focus-visible { outline: none; box-shadow: 0 0 0 1.5px var(--color-human), var(--ring-focus); }
+.rm-topbar { flex-wrap: wrap; height: auto; min-height: calc(var(--space-12) + var(--space-2)); }
+.rm-logo { height: var(--space-6); }
+@media (max-width: 900px) { .rm-topbar { gap: var(--space-2); padding: var(--space-2) var(--space-3); } }
+/* Marca: enlace sin subrayado */
+a.rm-brand { color: var(--color-text-1); text-decoration: none; }
+/* rm-chip__bot: tag BOT junto al nombre de un agente en los chips de filtro */
+.rm-chip__bot { font-family: var(--font-mono); font-size: var(--text-label-size); font-weight: var(--text-label-weight); color: var(--color-agent); border: 1px solid var(--color-agent); border-radius: var(--radius-xs); padding: 0 var(--space-1); }
+/* chips de filtro: contornos y contraste más suaves */
+.rm-chip { border-color: var(--color-border-default); }
+.rm-chip .rm-avatar { box-shadow: none; }
+.rm-chip .rm-avatar--agent::after { background: var(--color-agent-soft); box-shadow: none; }
+.rm-chip__bot { border: 0; background: var(--color-agent-soft); border-radius: var(--radius-pill); padding: 0 var(--space-2); }

@@ -1,0 +1,155 @@
+/* Ramas — variables CSS generadas desde tokens.json. Tema único: oscuro. */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap');
+:root {
+  color-scheme: dark;
+
+  /* Color */
+  --color-bg-0: #05080b;
+  --color-bg-1: #081015;
+  --color-bg-2: #0c161c;
+  --color-bg-3: #112029;
+  --color-bg-4: #172a35;
+  --color-bg-5: #1e3542;
+  --color-glass-1: rgba(12, 22, 28, 0.55);
+  --color-glass-2: rgba(14, 26, 33, 0.72);
+  --color-glass-3: rgba(16, 30, 38, 0.88);
+  --color-scrim: rgba(2, 5, 7, 0.66);
+  --color-border-subtle: #16262f;
+  --color-border-default: #233844;
+  --color-border-strong: #34505f;
+  --color-border-control: #5b7f93;
+  --color-border-glow: rgba(46, 230, 255, 0.55);
+  --color-grid-line: rgba(120, 200, 230, 0.045);
+  --color-grid-dot: rgba(120, 200, 230, 0.16);
+  --color-text-1: #e8f3f7;
+  --color-text-2: #a3b8c2;
+  --color-text-3: #7d95a1;
+  --color-text-disabled: #4d6370;
+  --color-accent: #2ee6ff;
+  --color-accent-strong: #7af0ff;
+  --color-accent-soft: rgba(46, 230, 255, 0.12);
+  --color-on-accent: #02171c;
+  --color-glow: rgba(46, 230, 255, 0.40);
+  --color-focus: var(--color-accent-strong);
+  --color-status-inbox: #9aabb6;
+  --color-status-todo: #6eaaff;
+  --color-status-doing: #ffc247;
+  --color-status-review: #d08cff;
+  --color-status-done: #3cf0a0;
+  --color-status-blocked: #ff5c74;
+  --color-status-inbox-soft: rgba(154, 171, 182, 0.12);
+  --color-status-todo-soft: rgba(110, 170, 255, 0.13);
+  --color-status-doing-soft: rgba(255, 194, 71, 0.13);
+  --color-status-review-soft: rgba(208, 140, 255, 0.13);
+  --color-status-done-soft: rgba(60, 240, 160, 0.12);
+  --color-status-blocked-soft: rgba(255, 92, 116, 0.14);
+  --color-prio-urgent: #ff5c74;
+  --color-prio-high: #ff9b52;
+  --color-prio-medium: #8fb6d6;
+  --color-prio-low: #7d95a1;
+  --color-log-summary: var(--color-accent);
+  --color-log-decision: var(--color-status-done);
+  --color-log-question: var(--color-status-doing);
+  --color-log-blocker: var(--color-status-blocked);
+  --color-log-note: var(--color-text-2);
+  --color-log-commit: #9fe870;
+  --color-human: #f5c99b;
+  --color-human-soft: rgba(245, 201, 155, 0.14);
+  --color-agent: #a5b4ff;
+  --color-agent-soft: rgba(165, 180, 255, 0.14);
+  --color-record: #ff3d5a;
+  --color-on-record: #1a0006;
+  --color-record-glow: rgba(255, 61, 90, 0.45);
+  --color-flow-done: var(--color-status-done);
+  --color-flow-doing: var(--color-status-doing);
+  --color-flow-pending: #5b7f93;
+  --color-flow-blocked: var(--color-status-blocked);
+  --color-flow-path: var(--color-accent);
+
+  /* Spacing */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* Shadow */
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 24px 64px rgba(0, 0, 0, 0.6);
+  --glow-accent: 0 0 0 1px rgba(46, 230, 255, 0.55), 0 0 18px rgba(46, 230, 255, 0.28);
+  --glow-doing: 0 0 0 1px rgba(255, 194, 71, 0.5), 0 0 16px rgba(255, 194, 71, 0.22);
+  --glow-done: 0 0 10px rgba(60, 240, 160, 0.35);
+  --glow-blocked: 0 0 0 1px rgba(255, 92, 116, 0.55), 0 0 14px rgba(255, 92, 116, 0.22);
+  --glow-record: 0 0 0 4px rgba(255, 61, 90, 0.18), 0 0 24px rgba(255, 61, 90, 0.45);
+  --ring-focus: 0 0 0 2px #05080b, 0 0 0 4px #7af0ff;
+
+  /* Opacity */
+  --opacity-glass-1: 0.55;
+  --opacity-glass-2: 0.72;
+  --opacity-glass-3: 0.88;
+  --opacity-dimmed: 0.22;
+  --opacity-disabled: 0.42;
+
+  /* Blur */
+  --blur-glass-sm: 8px;
+  --blur-glass-md: 16px;
+  --blur-glass-lg: 24px;
+
+  /* Duration */
+  --dur-instant: 80ms;
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 380ms;
+  --dur-flow: 1600ms;
+  --dur-pulse: 2200ms;
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-linear: linear;
+
+  /* Tipografía */
+  --font-sans: Sora, "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --text-display-size: 32px; --text-display-line: 38px; --text-display-weight: 600; --text-display-tracking: -0.02em;
+  --text-title-lg-size: 22px; --text-title-lg-line: 28px; --text-title-lg-weight: 600; --text-title-lg-tracking: -0.01em;
+  --text-title-md-size: 17px; --text-title-md-line: 24px; --text-title-md-weight: 600;
+  --text-title-sm-size: 14px; --text-title-sm-line: 20px; --text-title-sm-weight: 600;
+  --text-body-size: 14px; --text-body-line: 21px; --text-body-weight: 400;
+  --text-body-sm-size: 13px; --text-body-sm-line: 19px; --text-body-sm-weight: 400;
+  --text-caption-size: 12px; --text-caption-line: 16px; --text-caption-weight: 500;
+  --text-label-size: 11px; --text-label-line: 14px; --text-label-weight: 600; --text-label-tracking: 0.14em;
+  --text-metric-xl-size: 34px; --text-metric-xl-line: 38px; --text-metric-xl-weight: 500; --text-metric-xl-tracking: -0.02em;
+  --text-mono-md-size: 13px; --text-mono-md-line: 18px; --text-mono-md-weight: 500;
+  --text-mono-sm-size: 11px; --text-mono-sm-line: 14px; --text-mono-sm-weight: 500; --text-mono-sm-tracking: 0.02em;
+}
+
+/* Clases de estilo tipográfico */
+.t-display { font-family: var(--font-sans); font-size: 32px; line-height: 38px; font-weight: 600; letter-spacing: -0.02em; }
+.t-title-lg { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; }
+.t-title-md { font-family: var(--font-sans); font-size: 17px; line-height: 24px; font-weight: 600; }
+.t-title-sm { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 600; }
+.t-body { font-family: var(--font-sans); font-size: 14px; line-height: 21px; font-weight: 400; }
+.t-body-sm { font-family: var(--font-sans); font-size: 13px; line-height: 19px; font-weight: 400; }
+.t-caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 500; }
+.t-label { font-family: var(--font-sans); font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.t-metric-xl { font-family: var(--font-mono); font-size: 34px; line-height: 38px; font-weight: 500; letter-spacing: -0.02em; }
+.t-mono-md { font-family: var(--font-mono); font-size: 13px; line-height: 18px; font-weight: 500; }
+.t-mono-sm { font-family: var(--font-mono); font-size: 11px; line-height: 14px; font-weight: 500; letter-spacing: 0.02em; }

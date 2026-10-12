@@ -1,0 +1,64 @@
+<!-- @dsCard group="Pantallas" page height=900 width=1440 subtitle="Kanban por estado con filtros, quick-add y conectores a padre e hijos de la tarjeta seleccionada" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Tablero</title>
+<style>
+  body { background: var(--color-bg-0); overflow: hidden; }
+  .app { width: 1440px; height: 900px; display: grid; grid-template-rows: 56px auto 1fr; overflow: hidden; }
+  .filters { background: var(--color-bg-2); }
+  .rm-board { grid-auto-columns: 224px; gap: var(--space-3); height: 100%; }
+  .rm-col { min-height: 300px; }
+  .rm-col .rm-card { width: 100%; }
+  .overlay { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 3; }
+  .soft-dim { opacity: .5; }
+  .hint { position: absolute; left: 50%; bottom: var(--space-5); transform: translateX(-50%); display: inline-flex; align-items: center; gap: var(--space-2); height: 34px; padding: 0 var(--space-3); border-radius: var(--radius-pill); background: var(--color-glass-3); border: 1px solid var(--color-border-glow); font-size: 12px; color: var(--color-text-2); z-index: 4; }
+  .hint b { color: var(--color-text-1); }
+  .board-wrap { position: relative; overflow: hidden; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="top"></div>
+  <div class="rm-filters filters" id="filters"></div>
+  <div class="board-wrap rm-gridbg"><div class="rm-board" id="board"></div><svg class="overlay" id="ov"></svg>
+    <div class="hint"><span class="rm-id">R-3</span> <b>seleccionada</b> · padre <span class="rm-id">R-1</span> · 2 ramas <span class="rm-kbd">Esc</span> para soltar</div></div>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('top').innerHTML = R.topbar('Tablero');
+  document.getElementById('filters').innerHTML =
+    '<span class="rm-label" style="margin-right:4px">Persona</span>' +
+    ['benja', 'tomi', 'claude', 'codex'].map(function (p, i) { return '<button class="rm-chip' + (i === 2 ? ' is-on' : '') + '">' + R.avatar(p, { size: 'xs' }) + R.PEOPLE[p].name + '</button>'; }).join('') +
+    '<span class="rm-filters__sep"></span><span class="rm-label" style="margin-right:4px">Tipo</span><button class="rm-chip">Ideas</button><button class="rm-chip">Tareas</button><button class="rm-chip">Con preguntas ❓</button>' +
+    '<span class="rm-filters__sep"></span><span class="rm-switch"><span class="rm-switch__t"></span>Ocultar hechas</span>' +
+    '<span style="flex:1"></span><span class="rm-faint" style="font-size:12px">7 nodos · 1 filtro activo</span><button class="rm-btn rm-btn--ghost rm-btn--sm">Limpiar</button>';
+
+  var COLS = [['inbox', []], ['todo', ['R-4', 'R-5', 'R-7']], ['doing', ['R-1', 'R-3']], ['review', ['R-2']], ['done', ['R-6']], ['blocked', []]];
+  var SEL = 'R-3', REL = { 'R-1': 1, 'R-6': 1, 'R-7': 1 };
+  document.getElementById('board').innerHTML = COLS.map(function (c) {
+    var s = c[0], ids = c[1];
+    var cards = ids.map(function (id) { return R.card(id, { cls: id === SEL ? 'is-selected' : REL[id] ? 'is-path' : 'soft-dim', noGlow: id !== SEL && id !== 'R-1' }); }).join('');
+    var empty = !ids.length ? '<div class="rm-col__empty">' + (s === 'inbox' ? 'Inbox al día. Las ideas nuevas caen acá.' : 'Nada bloqueado. Bien ahí.') + '</div>' : '';
+    var quick = (s === 'inbox' || s === 'todo') ? '<button class="rm-quickadd">＋ Agregar a ' + R.STATUS[s] + '</button>' : '';
+    return '<section class="rm-col' + (!ids.length ? ' is-empty' : '') + '"><header class="rm-col__head"><span class="rm-col__name">' + R.pill(s) + '</span><span class="rm-col__n">' + ids.length + '</span></header>' + cards + empty + quick + '</section>';
+  }).join('');
+
+  function draw() {
+    var ov = document.getElementById('ov'), base = ov.getBoundingClientRect();
+    function box(id) { var r = document.querySelector('.rm-board [data-id="' + id + '"]').getBoundingClientRect(); return { l: r.left - base.left, r: r.right - base.left, t: r.top - base.top, b: r.bottom - base.top, cy: r.top - base.top + r.height / 2 }; }
+    var s = R.arrowDefs('kb');
+    var p = box('R-1'), c = box('R-3');
+    /* mismo columna: lazo por la derecha */
+    s += R.edge('M' + p.r + ',' + (p.cy) + ' C' + (p.r + 44) + ',' + p.cy + ' ' + (c.r + 44) + ',' + c.cy + ' ' + (c.r + 3) + ',' + c.cy, 'doing', { prefix: 'kb', path: true });
+    var d6 = box('R-6');
+    s += R.edge(R.edgePath(c.r + 2, c.cy - 20, d6.l - 3, d6.cy), 'done', { prefix: 'kb', path: true });
+    var d7 = box('R-7');
+    s += R.edge('M' + c.l + ',' + (c.cy + 20) + ' C' + (c.l - 60) + ',' + (c.cy + 20) + ' ' + (d7.r + 60) + ',' + d7.cy + ' ' + (d7.r + 3) + ',' + d7.cy, 'pending', { prefix: 'kb', path: true });
+    ov.innerHTML = s;
+  }
+  requestAnimationFrame(draw);
+</script>
+</body>
+</html>

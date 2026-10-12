@@ -1,0 +1,90 @@
+<!-- @dsCard group="Pantallas" page height=1860 width=1440 subtitle="Panel de detalle de R-3: campos, adjuntos, ramas, bitácora e historial" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Detalle</title>
+<style>
+  body { background: var(--color-bg-0); }
+  .app { width: 1440px; min-height: 1860px; display: grid; grid-template-rows: 56px 1fr; }
+  .split { display: grid; grid-template-columns: 1fr 500px; min-height: 0; }
+  .canvas { position: relative; overflow: hidden; }
+  .canvas .node { position: absolute; }
+  .canvas svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+  .rm-panel { width: 500px; max-height: none; border-left: 1px solid var(--color-border-strong); }
+  .meta { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; font-size: 12px; color: var(--color-text-3); }
+  .meta .rm-mono { color: var(--color-text-2); }
+  .timer { display: inline-flex; align-items: center; gap: var(--space-2); height: 26px; padding: 0 var(--space-2) 0 6px; border-radius: var(--radius-pill); border: 1px solid rgba(255, 194, 71, .5); background: var(--color-status-doing-soft); color: var(--color-status-doing); font-family: var(--font-mono); font-size: 11px; }
+  .thumb-a { background-image: linear-gradient(var(--color-bg-5) 0 0), linear-gradient(var(--color-bg-5) 0 0), linear-gradient(var(--color-bg-5) 0 0), linear-gradient(135deg, #1b3a46, #10232c); background-size: 60% 6px, 40% 6px, 70% 18px, cover; background-position: 10px 10px, 10px 22px, 10px 36px, 0 0; background-repeat: no-repeat; }
+  .composer { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2); }
+  .composer .rm-select { width: 150px; height: 32px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="top"></div>
+  <div class="split">
+    <div class="canvas rm-dotgrid" id="cv"><svg id="ed"></svg></div>
+    <aside class="rm-panel" id="panel" aria-label="Detalle de R-3"></aside>
+  </div>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('top').innerHTML = R.topbar('Flujo');
+
+  /* Canvas de fondo, con el camino de R-3 iluminado */
+  var POS = { 'R-1': [24, 200], 'R-2': [392, 40], 'R-3': [392, 220], 'R-4': [392, 420], 'R-6': [676, 130], 'R-7': [676, 320] };
+  var cv = document.getElementById('cv'), path = { 'R-1': 1, 'R-3': 1, 'R-6': 1, 'R-7': 1 };
+  Object.keys(POS).forEach(function (id) {
+    var d = document.createElement('div'); d.className = 'node'; d.style.left = POS[id][0] + 'px'; d.style.top = POS[id][1] + 'px';
+    d.innerHTML = R.card(id, { cls: id === 'R-3' ? 'is-selected' : path[id] ? 'is-path' : 'is-dimmed', noGlow: id !== 'R-3' }); cv.appendChild(d);
+  });
+  requestAnimationFrame(function () {
+    function b(id) { var e = cv.querySelector('[data-id="' + id + '"]'); return [POS[id][0], POS[id][1], e.offsetWidth, e.offsetHeight]; }
+    var s = R.arrowDefs('dt');
+    [['R-1', 'R-2'], ['R-1', 'R-3'], ['R-1', 'R-4'], ['R-3', 'R-6'], ['R-3', 'R-7']].forEach(function (e) {
+      var p = b(e[0]), c = b(e[1]), on = path[e[0]] && path[e[1]];
+      s += R.edge(R.edgePath(p[0] + p[2] + 4, p[1] + p[3] / 2, c[0] - 3, c[1] + c[3] / 2), R.edgeKind(R.byId(e[1]).status), { prefix: 'dt', path: on, dimmed: !on });
+    });
+    document.getElementById('ed').innerHTML = s;
+  });
+
+  /* Panel */
+  function entry(who, type, when, body, extra) {
+    var p = R.PEOPLE[who];
+    return '<div class="rm-log__item' + (p.agent ? ' rm-log__item--agent' : '') + (type === 'question' ? ' rm-log__item--question' : '') + '">' + R.avatar(who) +
+      '<div><div class="rm-log__meta"><span class="rm-log__author">' + p.name + '</span>' + R.logtag(type) + '<time>' + when + '</time></div>' +
+      '<div class="rm-log__box rm-log__body">' + body + (extra || '') + '</div></div></div>';
+  }
+  var html = '';
+  html += '<header class="rm-panel__head"><div class="rm-panel__bar"><nav class="rm-crumbs" aria-label="Ancestros"><a href="#"><span class="rm-idea-tag">◉</span> R-1 · Reservas de turnos por WhatsApp</a><span class="rm-crumbs__sep">/</span><span class="rm-id" style="color:var(--color-text-1)">R-3</span></nav>' +
+    '<span style="display:flex"><button class="rm-iconbtn" title="Ver en flujo" aria-label="Ver en flujo">⌖</button><button class="rm-iconbtn" aria-label="Más acciones">⋯</button><button class="rm-iconbtn" aria-label="Cerrar">×</button></span></div>' +
+    '<h1 class="rm-title-edit" contenteditable="true" spellcheck="false">Modelo de turnos y disponibilidad</h1>' +
+    '<div class="meta"><span>Creada por ' + R.avatar('tomi', { size: 'xs' }) + ' Tomi · hace 3 días</span><span>⏱ <span class="rm-mono">6h 40m</span> en total</span><span class="timer"><span class="rm-recdot" style="width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor"></span>claude · 00:23:10 <button class="rm-iconbtn" style="width:20px;height:20px;color:inherit" aria-label="Pausar">❚❚</button></span></div></header>';
+  html += '<div class="rm-panel__body">';
+  html += '<dl class="rm-props"><dt>Estado</dt><dd>' + R.pill('doing', { interactive: true }) + '</dd><dt>Prioridad</dt><dd>' + R.prio('urgent') + ' <span class="rm-faint">▾</span></dd><dt>Responsable</dt><dd>' + R.who('claude') + ' <span class="rm-faint">▾</span></dd><dt>Tipo</dt><dd>Tarea <span class="rm-faint">▾</span></dd></dl>';
+  html += '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Descripción</span><button class="rm-btn rm-btn--ghost rm-btn--sm">Editar</button></div><p style="margin:0;color:var(--color-text-2)">Definir cómo guardamos la agenda de cada profesional y cómo se calculan los horarios libres que el bot ofrece por WhatsApp. Slots de 30 min por defecto.</p></section>';
+  html += '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Adjuntos · 3</span><span style="display:flex;gap:4px"><button class="rm-btn rm-btn--ghost rm-btn--sm">＋ Archivo</button><button class="rm-btn rm-btn--ghost rm-btn--sm">🎙 Grabar</button></span></div>' +
+    '<div class="rm-audio is-playing"><button class="rm-audio__play" aria-label="Pausar">❚❚</button><div class="rm-audio__mid"><div class="rm-audio__top"><b>nota-benja-feriados.m4a</b><span class="rm-audio__time">00:14 / 00:38</span></div>' + R.wave(56, 31, .37) + '</div><div class="rm-audio__side"><button class="rm-iconbtn" aria-label="Descargar" title="Descargar">↓</button><button class="rm-iconbtn" aria-label="Transcripción" title="Transcripción" style="color:var(--color-accent)">¶</button></div>' +
+    '<div class="rm-audio__transcript">“Acordate que los feriados nacionales no tienen que aparecer como disponibles, y algunos negocios cierran al mediodía.”</div></div>' +
+    '<div class="rm-thumbs"><div class="rm-thumb thumb-a" title="boceto-agenda.png"></div><div class="rm-thumb rm-thumb--add" title="Agregar imagen">＋</div></div>' +
+    '<a class="rm-link" href="#"><span class="rm-link__fav">↗</span>Docs · WhatsApp Cloud API mensajes interactivos<span class="rm-link__host">developers.facebook.com</span></a></section>';
+  html += '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Ramas · 1/2</span><div class="rm-progress" style="min-width:120px"><div class="rm-progress__track"><span class="rm-progress__seg rm-progress__seg--done" style="width:50%"></span></div></div></div><div class="rm-branches">' +
+    ['R-6', 'R-7'].map(function (id) { var n = R.byId(id); return '<div class="rm-branch"><span class="rm-branch__line"></span><span class="rm-id">' + id + '</span><span>' + n.title + '</span>' + R.pill(n.status) + R.avatar(n.owner, { size: 'xs' }) + '</div>'; }).join('') +
+    '</div><div class="rm-inputwrap"><span class="rm-inputwrap__icon">🌿</span><input class="rm-input" placeholder="Agregá una rama y apretá Enter"></div></section>';
+  html += '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Bitácora · 5</span><div class="rm-seg"><button class="is-on">Todo</button><button>❓ 1</button><button>Commits</button></div></div>' +
+    '<div class="composer"><input class="rm-input" placeholder="Escribí una nota, decisión o pregunta…"><select class="rm-select"><option>Nota</option><option>Decisión</option><option>Pregunta abierta</option></select></div><div class="rm-log">' +
+    entry('claude', 'question', 'hace 40 min', '¿Los turnos se pueden superponer si hay más de un profesional?', '<div class="rm-log__actions"><button class="rm-btn rm-btn--primary rm-btn--sm">✓ Resolver</button><button class="rm-btn rm-btn--ghost rm-btn--sm">Responder</button></div>') +
+    entry('claude', 'commit', 'hace 1 h', '<span class="rm-hash">a3f9c1e</span> feat(slots): tabla de slots y generación semanal') +
+    entry('claude', 'summary', 'hace 2 h', 'Armé el modelo <code>Slot(profesional, inicio, fin, estado)</code> y la generación semanal. Falta resolver feriados (R-7) y si hay superposición.') +
+    entry('benja', 'decision', 'ayer', 'Duración por defecto: 30 min, configurable por servicio.') +
+    entry('tomi', 'note', 'hace 3 días', 'Ojo que hay negocios que cortan al mediodía.') + '</div></section>';
+  html += '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Historial de estados</span></div><div class="rm-history">' +
+    [['08/10 09:30', 'todo', 'doing', 'claude'], ['07/10 18:02', 'inbox', 'todo', 'benja'], ['05/10 10:12', null, 'inbox', 'tomi']].map(function (h) {
+      return '<div class="rm-history__row"><time>' + h[0] + '</time><span style="display:flex;gap:6px;align-items:center">' + (h[1] ? R.pill(h[1]) + '<span class="rm-faint">→</span>' : '<span class="rm-faint">creada en</span>') + R.pill(h[2]) + '</span>' + R.avatar(h[3], { size: 'xs' }) + '</div>';
+    }).join('') + '</div></section>';
+  html += '</div>';
+  document.getElementById('panel').innerHTML = html;
+</script>
+</body>
+</html>

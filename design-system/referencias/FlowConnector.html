@@ -1,0 +1,45 @@
+<!-- @dsCard group="Nodos y flujo" height=600 width=960 subtitle="Los 4 estados según el hijo + camino iluminado y atenuado" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Conector de flujo</title>
+<style>
+  body { background: var(--color-bg-1); padding: var(--space-6); }
+  .rows { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .row { display: grid; grid-template-columns: 1fr; gap: var(--space-2); padding: var(--space-4); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-lg); background: rgba(8,16,21,.6); }
+  .row h4 { margin: 0; display: flex; gap: var(--space-2); align-items: center; }
+  .row p { margin: 0; font-size: 12px; color: var(--color-text-2); }
+  svg { display: block; width: 100%; height: 120px; overflow: visible; }
+  .node { fill: var(--color-bg-3); stroke: var(--color-border-default); }
+  .node.sel { stroke: var(--color-accent); }
+  .nlabel { font-family: var(--font-mono); font-size: 11px; fill: var(--color-text-2); }
+  .ntitle { font-family: var(--font-sans); font-size: 12px; fill: var(--color-text-1); font-weight: 600; }
+</style>
+</head>
+<body class="rm-dotgrid">
+<div class="rows" id="root"></div>
+<script>
+  var R = window.Ramas;
+  function demo(i, kind, label, note, status, opts) {
+    opts = opts || {};
+    var pre = 'c' + i, d = R.edgePath(150, 50, 300, 84);
+    var d2 = R.edgePath(150, 60, 300, opts.fork ? 104 : 60);
+    var svg = '<svg viewBox="0 0 440 120" aria-label="Conector ' + label + '">' + R.arrowDefs(pre) +
+      '<rect class="node' + (opts.path ? ' sel' : '') + '" x="10" y="26" width="140" height="48" rx="10"/><text class="nlabel" x="22" y="46">R-3</text><text class="ntitle" x="22" y="63">Padre</text>' +
+      R.edge(d, kind, { prefix: pre, path: opts.path }) +
+      (opts.fork ? R.edge(R.edgePath(150, 50, 300, 10), 'pending', { prefix: pre, dimmed: true }) : '') +
+      '<rect class="node" x="302" y="60" width="128" height="48" rx="10" style="' + (opts.dimHead ? 'opacity:.22' : '') + '"/><text class="nlabel" x="314" y="80">R-' + (6 + i) + '</text>' +
+      '<text class="ntitle" x="314" y="97">Hijo</text>' + '</svg>';
+    return '<div class="row"><h4><span class="rm-label">' + label + '</span>' + (status ? R.pill(status) : '') + '</h4>' + svg + '<p>' + note + '</p></div>';
+  }
+  document.getElementById('root').innerHTML =
+    demo(0, 'done', 'Hecho', 'Sólido y luminoso: <code>.rm-edge--done</code> con glow verde.', 'done') +
+    demo(1, 'doing', 'En curso', 'Base tenue + partícula que recorre la curva cada <code>dur-flow</code> (<code>.rm-edge__pulse</code>). Aplica a Haciendo y Revisión.', 'doing') +
+    demo(2, 'pending', 'Pendiente', 'Punteado <code>2 6</code> en <code>color-flow-pending</code>. Inbox y Por hacer.', 'todo') +
+    demo(3, 'blocked', 'Bloqueado', 'Rojo con guiones largos <code>10 4</code>. Se lee sin depender del color.', 'blocked') +
+    demo(4, 'pending', 'Camino iluminado', 'Hover/selección: <code>.is-path</code> engrosa a 2.5px y vuelve cian lo punteado.', null, { path: true }) +
+    demo(5, 'doing', 'Atenuado', 'Lo que no pertenece al camino baja a <code>opacity-dimmed</code>.', null, { path: true, fork: true });
+</script>
+</body>
+</html>

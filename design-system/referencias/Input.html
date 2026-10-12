@@ -1,0 +1,27 @@
+<!-- @dsCard group="Controles" height=420 width=960 subtitle="Input, select, textarea y quick-add en todos sus estados" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Inputs y selects</title>
+<style>
+  body { background: var(--color-bg-2); padding: var(--space-6); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5) var(--space-6); }
+</style>
+</head>
+<body>
+<div class="grid">
+  <label class="rm-field"><span class="rm-field__label">Título · default</span><input class="rm-input" placeholder="Nombre de la rama"></label>
+  <label class="rm-field"><span class="rm-field__label">Hover</span><input class="rm-input is-hover" value="Bloqueo por feriados"></label>
+  <label class="rm-field"><span class="rm-field__label">Foco</span><input class="rm-input is-focus" value="Bloqueo por feriados|"></label>
+  <label class="rm-field"><span class="rm-field__label">Deshabilitado</span><input class="rm-input" disabled value="R-6 · cerrado"></label>
+  <label class="rm-field"><span class="rm-field__label">Buscando</span><span class="rm-inputwrap"><span class="rm-inputwrap__icon">⌕</span><input class="rm-input" value="turnos"><span class="rm-spin"></span></span></label>
+  <label class="rm-field is-error"><span class="rm-field__label">Clave de equipo · error</span><input class="rm-input" value="ramas-2025"><span class="rm-field__help">Esa clave no existe. Pedila a alguien del equipo.</span></label>
+  <label class="rm-field"><span class="rm-field__label">Estado</span><select class="rm-select"><option>Haciendo</option><option>Revisión</option></select></label>
+  <label class="rm-field"><span class="rm-field__label">Responsable</span><select class="rm-select"><option>🐥 Benja</option><option>🤖 claude</option></select></label>
+  <label class="rm-field"><span class="rm-field__label">Tipo</span><select class="rm-select" disabled><option>Tarea</option></select></label>
+  <label class="rm-field" style="grid-column: span 2"><span class="rm-field__label">Descripción</span><textarea class="rm-textarea" placeholder="Contá de qué se trata…">Generar slots de 30 min por profesional según su agenda semanal.</textarea><span class="rm-field__help">Markdown simple. ⌘↵ para guardar.</span></label>
+  <div class="rm-field"><span class="rm-field__label">Quick-add · default / foco</span><button class="rm-quickadd">＋ Agregar a Inbox</button><div class="rm-quickadd is-focus">Mensaje de recordatorio 24 h antes<span style="margin-left:auto" class="rm-kbd">↵</span></div></div>
+</div>
+</body>
+</html>

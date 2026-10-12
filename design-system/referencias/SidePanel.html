@@ -1,0 +1,28 @@
+<!-- @dsCard group="Superficies" height=520 width=960 subtitle="Estructura del panel de detalle + cargando y vacío" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Panel lateral</title>
+<style>
+  body { background: var(--color-bg-1); }
+  .stage { display: flex; justify-content: flex-end; gap: var(--space-4); height: 520px; padding: var(--space-4); }
+  .rm-panel { width: 440px; border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); overflow: hidden; }
+  .sk { display: grid; gap: 10px; }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="stage" id="root"></div>
+<script>
+  var R = window.Ramas;
+  var loaded = '<aside class="rm-panel" aria-label="Detalle de R-7">' +
+    '<header class="rm-panel__head"><div class="rm-panel__bar"><nav class="rm-crumbs"><a href="#">◉ R-1</a><span class="rm-crumbs__sep">/</span><a href="#">R-3</a><span class="rm-crumbs__sep">/</span><span class="rm-id">R-7</span></nav><span><button class="rm-iconbtn" aria-label="Más">⋯</button><button class="rm-iconbtn" aria-label="Cerrar">×</button></span></div>' +
+    '<h2 class="rm-title-edit" contenteditable="true">Bloqueo por feriados</h2></header>' +
+    '<div class="rm-panel__body"><dl class="rm-props"><dt>Estado</dt><dd>' + R.pill('todo', { interactive: true }) + '</dd><dt>Prioridad</dt><dd>' + R.prio('medium') + '</dd><dt>Responsable</dt><dd>' + R.who('benja') + '</dd><dt>Tipo</dt><dd>Tarea</dd></dl>' +
+    '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Descripción</span></div><p style="margin:0;color:var(--color-text-2)">Si el día es feriado nacional, no se ofrecen slots.</p></section>' +
+    '<section class="rm-section"><div class="rm-section__title"><span class="rm-label">Ramas · 0</span></div><div class="rm-empty" style="padding:12px;justify-items:start">Sin ramas todavía.</div><div class="rm-quickadd">＋ Agregá una rama…</div></section></div></aside>';
+  var loading = '<aside class="rm-panel" aria-busy="true"><header class="rm-panel__head"><span class="rm-skel" style="width:40%"></span><span class="rm-skel" style="height:22px;width:75%"></span></header><div class="rm-panel__body"><div class="sk"><span class="rm-skel" style="width:60%"></span><span class="rm-skel" style="width:45%"></span><span class="rm-skel" style="width:52%"></span></div><div class="sk"><span class="rm-skel"></span><span class="rm-skel" style="width:90%"></span><span class="rm-skel" style="width:70%"></span></div></div></aside>';
+  document.getElementById('root').innerHTML = loading + loaded;
+</script>
+</body>
+</html>

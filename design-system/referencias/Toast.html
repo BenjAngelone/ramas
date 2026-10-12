@@ -1,0 +1,22 @@
+<!-- @dsCard group="Superficies" height=300 width=960 subtitle="Éxito, agente, aviso, error, info" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Toast</title>
+<style>
+  body { background: var(--color-bg-1); padding: var(--space-6); }
+  .grid { display: grid; grid-template-columns: repeat(2, 360px); gap: var(--space-4) var(--space-6); }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="grid">
+  <div class="rm-toast rm-toast--success" role="status"><span class="rm-toast__icon">✓</span><div><div class="rm-toast__title">R-6 pasó a Hecho</div><div class="rm-toast__text">Tabla de slots · 1/2 ramas de R-3</div></div><button class="rm-iconbtn" aria-label="Cerrar">×</button></div>
+  <div class="rm-toast rm-toast--agent" role="status"><span class="rm-toast__icon">🤖</span><div><div class="rm-toast__title"><span class="rm-who__name--agent">claude</span> dejó una pregunta</div><div class="rm-toast__text">en R-3: ¿Los turnos se pueden superponer…?</div></div><button class="rm-btn rm-btn--ghost rm-btn--sm">Ver</button></div>
+  <div class="rm-toast rm-toast--warn" role="status"><span class="rm-toast__icon">!</span><div><div class="rm-toast__title">Audio guardado sin transcripción</div><div class="rm-toast__text">La podés pedir después desde el reproductor.</div></div><button class="rm-iconbtn" aria-label="Cerrar">×</button></div>
+  <div class="rm-toast rm-toast--error" role="alert"><span class="rm-toast__icon">!</span><div><div class="rm-toast__title">No se pudo mover R-4</div><div class="rm-toast__text">Se perdió la conexión. Volvé a intentar.</div></div><button class="rm-btn rm-btn--ghost rm-btn--sm">Reintentar</button></div>
+  <div class="rm-toast" role="status"><span class="rm-toast__icon">i</span><div><div class="rm-toast__title">Copiado al portapapeles</div><div class="rm-toast__text">Pegalo en la config de codex.</div></div><button class="rm-iconbtn" aria-label="Cerrar">×</button></div>
+  <div class="rm-toast" role="status"><span class="rm-toast__icon"><span class="rm-spin" style="width:10px;height:10px;border-width:1.5px"></span></span><div><div class="rm-toast__title">Subiendo audio…</div><div class="rm-toast__text">idea-tomi.m4a · 1.8 MB</div></div><button class="rm-iconbtn" aria-label="Cancelar">×</button></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!-- @dsCard group="Pantallas" page height=900 width=1440 subtitle="Vista Flujo: grafo idea → ramas, camino iluminado, zoom, pan y minimapa (interactivo)" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=1440"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Pantalla · Flujo</title>
+<style>
+  body { background: var(--color-bg-0); overflow: hidden; }
+  .app { width: 1440px; height: 900px; display: grid; grid-template-rows: 56px auto 1fr; overflow: hidden; }
+  .toolbar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--color-border-subtle); background: var(--color-bg-2); }
+  .canvas { position: relative; overflow: hidden; cursor: grab; }
+  .canvas.is-panning { cursor: grabbing; }
+  .world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .world.is-anim { transition: transform var(--dur-slow) var(--ease-in-out); }
+  .world svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+  .node { position: absolute; }
+  .hud-tl { position: absolute; left: var(--space-4); top: var(--space-4); display: flex; gap: var(--space-2); align-items: center; }
+  .hud-br { position: absolute; right: var(--space-4); bottom: var(--space-4); display: flex; gap: var(--space-2); align-items: flex-end; }
+  .hud-bl { position: absolute; left: var(--space-4); bottom: var(--space-4); display: grid; gap: var(--space-2); }
+  .sel-chip { display: inline-flex; align-items: center; gap: var(--space-2); height: 32px; padding: 0 6px 0 var(--space-3); border-radius: var(--radius-pill); background: var(--color-glass-2); border: 1px solid var(--color-border-glow); -webkit-backdrop-filter: blur(var(--blur-glass-md)); backdrop-filter: blur(var(--blur-glass-md)); font-size: 12px; color: var(--color-text-2); }
+  .sel-chip b { color: var(--color-text-1); font-weight: 600; }
+  .mm-node { position: absolute; border-radius: 2px; transition: opacity var(--dur-base) var(--ease-out); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="top"></div>
+  <div class="toolbar">
+    <nav class="rm-crumbs"><a href="#">App Turnos</a><span class="rm-crumbs__sep">/</span><span style="color:var(--color-text-1)">Flujo</span></nav>
+    <span class="rm-filters__sep"></span>
+    <div class="rm-seg"><button class="is-on">Todas las ideas</button><button>Solo activas</button></div>
+    <button class="rm-chip is-on" id="chip-people"></button>
+    <span class="rm-switch"><span class="rm-switch__t"></span>Ocultar hechas</span>
+    <span style="flex:1"></span>
+    <div class="rm-legend" id="legend"></div>
+  </div>
+  <main class="canvas rm-dotgrid" id="cv" aria-label="Canvas de flujo">
+    <div class="world" id="world"><svg id="edges" width="1200" height="800"></svg></div>
+    <div class="hud-tl"><span class="sel-chip" id="selchip"></span></div>
+        <div class="hud-br">
+      <div class="rm-minimap" id="mm" aria-label="Minimapa"><div class="rm-minimap__view" id="mmv"></div></div>
+      <button class="rm-btn rm-btn--secondary" id="center">⌖ Centrar en esta idea</button>
+      <div class="rm-canvas-ctrl"><button class="rm-iconbtn" id="zin" aria-label="Acercar">＋</button><span class="rm-canvas-ctrl__zoom" id="zl">100%</span><button class="rm-iconbtn" id="zout" aria-label="Alejar">−</button><button class="rm-iconbtn" id="fit" aria-label="Ver todo">⤢</button></div>
+    </div>
+  </main>
+</div>
+<script>
+  var R = window.Ramas;
+  document.getElementById('top').innerHTML = R.topbar('Flujo');
+  document.getElementById('chip-people').innerHTML = '<span class="rm-avatar-stack">' + R.avatar('benja', { size: 'xs' }) + R.avatar('tomi', { size: 'xs' }) + R.avatar('claude', { size: 'xs' }) + R.avatar('codex', { size: 'xs' }) + '</span>Todos';
+  document.getElementById('legend').innerHTML = [['done', 'Hecho'], ['doing', 'En curso'], ['pending', 'Pendiente'], ['blocked', 'Bloqueado']].map(function (l) {
+    return '<span><svg width="34" height="10">' + R.arrowDefs('lg' + l[0]) + R.edge('M2,5 L28,5', l[0], { prefix: 'lg' + l[0] }) + '</svg>' + l[1] + '</span>';
+  }).join('');
+
+  /* Nodos: escenario + una segunda idea colapsada para mostrar el contador */
+  var extra = { id: 'R-8', parent: null, kind: 'idea', title: 'Cobro de seña con Mercado Pago', status: 'inbox', prio: 'medium', owner: 'benja', counts: { audio: 1, link: 2 } };
+  var nodes = R.NODES.concat([extra]);
+  var POS = { 'R-1': [40, 236], 'R-2': [440, 24], 'R-3': [440, 196], 'R-4': [440, 384], 'R-5': [440, 548], 'R-6': [796, 112], 'R-7': [796, 290], 'R-8': [40, 590] };
+  var world = document.getElementById('world'), svg = document.getElementById('edges');
+  nodes.forEach(function (n) {
+    var hasKids = R.children(n.id).length > 0;
+    var html = R.card(n, n.id === 'R-8' ? { collapsed: 5, branches: [0, 5] } : { toggle: hasKids, noGlow: n.kind === 'idea' });
+    var d = document.createElement('div'); d.className = 'node'; d.style.left = POS[n.id][0] + 'px'; d.style.top = POS[n.id][1] + 'px'; d.innerHTML = html;
+    world.appendChild(d);
+  });
+  function el(id) { return world.querySelector('[data-id="' + id + '"]'); }
+  var edges = [];
+  function drawEdges() {
+    var s = R.arrowDefs('fl');
+    edges = [];
+    nodes.forEach(function (n) {
+      if (!n.parent) return;
+      var p = el(n.parent), c = el(n.id);
+      var x1 = POS[n.parent][0] + p.offsetWidth, y1 = POS[n.parent][1] + p.offsetHeight / 2;
+      var x2 = POS[n.id][0] - 3, y2 = POS[n.id][1] + c.offsetHeight / 2;
+      edges.push({ from: n.parent, to: n.id, d: R.edgePath(x1 + 14, y1, x2, y2), kind: R.edgeKind(n.status) });
+    });
+    return s;
+  }
+  var defs = drawEdges();
+  function paintEdges(set) {
+    svg.innerHTML = defs + edges.map(function (e) {
+      var on = set && set[e.from] && set[e.to];
+      return R.edge(e.d, e.kind, { prefix: 'fl', path: !!on, dimmed: set && !on });
+    }).join('');
+  }
+
+  /* Camino iluminado */
+  var selected = 'R-3';
+  function pathSet(id) { var s = {}; s[id] = 1; R.ancestors(id).forEach(function (a) { s[a.id] = 1; }); R.descendants(id).forEach(function (a) { s[a.id] = 1; }); return s; }
+  function highlight(id) {
+    var set = id ? pathSet(id) : null;
+    nodes.forEach(function (n) {
+      var c = el(n.id);
+      c.classList.toggle('is-path', !!set && !!set[n.id] && n.id !== selected);
+      c.classList.toggle('is-dimmed', !!set && !set[n.id]);
+      c.classList.toggle('is-selected', n.id === selected);
+    });
+    paintEdges(set);
+    paintMinimap(set);
+  }
+  function setChip() {
+    var n = R.byId(selected) || extra, root = R.ancestors(selected)[0] || n;
+    document.getElementById('selchip').innerHTML = '<span class="rm-id">' + n.id + '</span><b>' + R.esc(n.title) + '</b><span class="rm-faint">· camino desde ' + root.id + '</span><button class="rm-iconbtn" style="width:24px;height:24px" id="clr" aria-label="Quitar selección">×</button>';
+  }
+  world.addEventListener('mouseover', function (e) { var c = e.target.closest('.rm-card'); if (c) highlight(c.dataset.id); });
+  world.addEventListener('mouseout', function (e) { var c = e.target.closest('.rm-card'); if (c && !c.contains(e.relatedTarget)) highlight(selected); });
+  world.addEventListener('click', function (e) { var c = e.target.closest('.rm-card'); if (c) { selected = c.dataset.id; setChip(); highlight(selected); } });
+  document.addEventListener('click', function (e) { if (e.target.id === 'clr') { highlight(null); } });
+
+  /* Zoom y pan */
+  var cv = document.getElementById('cv'), st = { x: 64, y: 28, k: 1 };
+  function apply(anim) {
+    world.classList.toggle('is-anim', !!anim);
+    world.style.transform = 'translate(' + st.x + 'px,' + st.y + 'px) scale(' + st.k + ')';
+    document.getElementById('zl').textContent = Math.round(st.k * 100) + '%';
+    paintView();
+  }
+  function zoomAt(f, cx, cy, anim) {
+    var k = Math.min(2, Math.max(0.35, st.k * f)); f = k / st.k;
+    st.x = cx - (cx - st.x) * f; st.y = cy - (cy - st.y) * f; st.k = k; apply(anim);
+  }
+  cv.addEventListener('wheel', function (e) { e.preventDefault(); var r = cv.getBoundingClientRect(); zoomAt(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top); }, { passive: false });
+  var drag = null;
+  cv.addEventListener('mousedown', function (e) { if (e.target.closest('.rm-card, button, .rm-minimap')) return; drag = [e.clientX - st.x, e.clientY - st.y]; cv.classList.add('is-panning'); });
+  window.addEventListener('mousemove', function (e) { if (!drag) return; st.x = e.clientX - drag[0]; st.y = e.clientY - drag[1]; apply(); });
+  window.addEventListener('mouseup', function () { drag = null; cv.classList.remove('is-panning'); });
+  document.getElementById('zin').onclick = function () { zoomAt(1.2, cv.clientWidth / 2, cv.clientHeight / 2, true); };
+  document.getElementById('zout').onclick = function () { zoomAt(1 / 1.2, cv.clientWidth / 2, cv.clientHeight / 2, true); };
+  function fitTo(ids) {
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    ids.forEach(function (id) { var c = el(id); x0 = Math.min(x0, POS[id][0]); y0 = Math.min(y0, POS[id][1]); x1 = Math.max(x1, POS[id][0] + c.offsetWidth); y1 = Math.max(y1, POS[id][1] + c.offsetHeight); });
+    var k = Math.min(1.25, (cv.clientWidth - 160) / (x1 - x0), (cv.clientHeight - 160) / (y1 - y0));
+    st.k = k; st.x = (cv.clientWidth - (x1 - x0) * k) / 2 - x0 * k; st.y = (cv.clientHeight - (y1 - y0) * k) / 2 - y0 * k; apply(true);
+  }
+  document.getElementById('center').onclick = function () { var root = R.ancestors(selected)[0] || R.byId(selected) || extra; fitTo([root.id].concat(R.descendants(root.id).map(function (n) { return n.id; }))); };
+  document.getElementById('fit').onclick = function () { fitTo(nodes.map(function (n) { return n.id; })); };
+
+  /* Minimapa */
+  var mm = document.getElementById('mm'), MS = 0.15;
+  var COL = { inbox: '--color-status-inbox', todo: '--color-status-todo', doing: '--color-status-doing', review: '--color-status-review', done: '--color-status-done', blocked: '--color-status-blocked' };
+  nodes.forEach(function (n) { var c = el(n.id), m = document.createElement('i'); m.className = 'mm-node'; m.dataset.id = n.id;
+    m.style.cssText = 'left:' + (POS[n.id][0] * MS + 6) + 'px;top:' + (POS[n.id][1] * MS + 8) + 'px;width:' + c.offsetWidth * MS + 'px;height:' + c.offsetHeight * MS + 'px;background:var(' + COL[n.status] + ')'; mm.appendChild(m); });
+  function paintMinimap(set) { mm.querySelectorAll('.mm-node').forEach(function (m) { m.style.opacity = set && !set[m.dataset.id] ? .25 : .85; }); }
+  function paintView() { var v = document.getElementById('mmv'); v.style.left = (-st.x / st.k * MS + 6) + 'px'; v.style.top = (-st.y / st.k * MS + 8) + 'px'; v.style.width = (cv.clientWidth / st.k * MS) + 'px'; v.style.height = (cv.clientHeight / st.k * MS) + 'px'; }
+
+  setChip(); apply(); highlight(selected);
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!-- @dsCard group="Nodos y flujo" height=980 width=960 subtitle="Idea vs tarea, contadores, prioridad, avatar y todos sus estados" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Tarjeta de nodo</title>
+<style>
+  body { background: var(--color-bg-1); padding: var(--space-6); }
+  .grid { display: grid; grid-template-columns: repeat(3, 288px); gap: var(--space-8) var(--space-6); align-items: start; }
+  .cap { margin-bottom: var(--space-2); display: flex; gap: var(--space-2); align-items: baseline; }
+  .cap small { font-size: 11px; color: var(--color-text-3); }
+  .wrap { position: relative; }
+</style>
+</head>
+<body class="rm-gridbg">
+<div class="grid" id="root"></div>
+<script>
+  var R = window.Ramas;
+  var skel = '<article class="rm-card is-loading" aria-busy="true"><div class="rm-card__head"><span class="rm-skel" style="width:36px"></span><span class="rm-skel" style="width:44px"></span></div><span class="rm-skel" style="height:14px;width:80%"></span><span class="rm-skel" style="width:55%"></span><div class="rm-card__foot"><span class="rm-skel" style="width:70px;height:18px;border-radius:999px"></span><span class="rm-skel" style="width:24px;height:24px;border-radius:50%"></span></div></article>';
+  var err = R.card('R-4', { cls: 'is-error' }).replace('</article>', '<div class="rm-card__error">! No se guardó. <button class="rm-btn rm-btn--ghost rm-btn--sm">Reintentar</button></div></article>');
+  var blocked = Object.assign({}, R.byId('R-7'), { status: 'blocked', title: 'Bloqueo por feriados', counts: { q: 1 } });
+  var items = [
+    ['Idea cero', 'variante idea · origen audio', R.card('R-1', { noGlow: true, toggle: true })],
+    ['Tarea · default', 'Por hacer', R.card('R-4')],
+    ['Hover', 'borde fuerte + capa bg-4', R.card('R-5', { cls: 'is-hover' })],
+    ['Activo · en curso', 'glow ámbar que respira', R.card('R-3', { toggle: true })],
+    ['Seleccionado', 'glow-accent', R.card('R-2', { cls: 'is-selected' })],
+    ['Foco (teclado)', 'ring-focus', R.card('R-7', { cls: 'is-focus' })],
+    ['Hecho', 'título baja a text-2', R.card('R-6')],
+    ['Bloqueado', 'glow-blocked', R.card(blocked)],
+    ['Colapsado', '+N ramas', R.card('R-3', { noGlow: true, collapsed: 5, cls: '' })],
+    ['Atenuado', 'fuera del camino', R.card('R-5', { cls: 'is-dimmed' })],
+    ['Deshabilitado', 'archivado / sin permiso', R.card('R-4', { cls: 'is-disabled' })],
+    ['Cargando', 'skeleton', skel],
+    ['Vacío', 'columna o rama sin nodos', '<article class="rm-card is-empty"><div><div style="font-size:18px;margin-bottom:4px">⌖</div>Soltá una idea acá<br><span class="rm-faint" style="font-size:12px">o grabá un audio con 🎙</span></div></article>'],
+    ['Error', 'falló el guardado', err],
+    ['Arrastrando', 'drag en el kanban', R.card('R-7', { cls: 'is-dragging' })]
+  ];
+  document.getElementById('root').innerHTML = items.map(function (it) {
+    return '<div class="wrap"><div class="cap"><span class="rm-label">' + it[0] + '</span><small>' + it[1] + '</small></div>' + it[2] + '</div>';
+  }).join('');
+</script>
+</body>
+</html>

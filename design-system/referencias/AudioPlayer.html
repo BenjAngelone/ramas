@@ -1,0 +1,37 @@
+<!-- @dsCard group="Audio" height=430 width=960 subtitle="Forma de onda, descarga, transcripción y estados" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Reproductor de audio</title>
+<style>
+  body { background: var(--color-bg-2); padding: var(--space-6); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5) var(--space-6); }
+  .cap { margin-bottom: var(--space-2); }
+</style>
+</head>
+<body>
+<div class="grid" id="root"></div>
+<script>
+  var R = window.Ramas;
+  function player(o) {
+    var play = o.state === 'playing' ? '❚❚' : o.state === 'loading' ? '<span class="rm-spin" style="width:12px;height:12px"></span>' : o.state === 'error' ? '!' : '▶';
+    return '<div class="rm-audio' + (o.state ? ' is-' + o.state : '') + '">' +
+      '<button class="rm-audio__play" aria-label="Reproducir">' + play + '</button>' +
+      '<div class="rm-audio__mid"><div class="rm-audio__top"><b>' + o.name + '</b><span class="rm-audio__time">' + o.time + '</span></div>' + R.wave(64, o.seed, o.played) + '</div>' +
+      '<div class="rm-audio__side"><button class="rm-iconbtn" title="Descargar" aria-label="Descargar">↓</button><button class="rm-iconbtn" title="Transcripción" aria-label="Transcripción">¶</button></div>' +
+      (o.transcript ? '<div class="rm-audio__transcript">' + o.transcript + '</div>' : '') +
+      (o.err ? '<div class="rm-card__error" style="grid-column:1/-1">' + o.err + '</div>' : '') + '</div>';
+  }
+  var items = [
+    ['Default', player({ name: 'idea-tomi.m4a', time: '02:14', seed: 11 })],
+    ['Reproduciendo', player({ name: 'idea-tomi.m4a', time: '00:51 / 02:14', seed: 11, played: .38, state: 'playing' })],
+    ['Con transcripción', player({ name: 'idea-tomi.m4a', time: '02:14', seed: 11, played: 1, transcript: '“Che, la idea es que los clientes saquen turno directo por WhatsApp. El bot les tira los horarios libres y confirma solo…”' })],
+    ['Cargando', player({ name: 'audio-benja-0412.m4a', time: '--:--', seed: 3, state: 'loading' })],
+    ['Error', player({ name: 'nota-voz.ogg', time: '00:00', seed: 5, state: 'error', err: '! No pudimos cargar el audio. Probá descargarlo.' })],
+    ['Vacío (sin audios)', '<div class="rm-empty" style="padding:var(--space-5);border:1px dashed var(--color-border-strong);border-radius:var(--radius-md)"><div>Todavía no hay audios. <button class="rm-btn rm-btn--record rm-btn--sm" style="margin-left:8px"><span class="rm-recdot"></span>Grabar</button></div></div>']
+  ];
+  document.getElementById('root').innerHTML = items.map(function (i) { return '<div><div class="cap rm-label">' + i[0] + '</div>' + i[1] + '</div>'; }).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!-- @dsCard group="Controles" height=380 width=960 subtitle="Primario, secundario, ghost, peligro y grabar × estados" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Botones</title>
+<style>
+  body { background: var(--color-bg-2); padding: var(--space-6); }
+  table { border-collapse: collapse; }
+  th { text-align: left; padding: 0 var(--space-4) var(--space-3) 0; }
+  td { padding: var(--space-2) var(--space-4) var(--space-2) 0; }
+  td:first-child { width: 110px; }
+</style>
+</head>
+<body>
+<table id="t"></table>
+<script>
+  var V = [['primary', '+ Idea'], ['secondary', 'Agentes'], ['ghost', 'Cancelar'], ['danger', 'Borrar rama'], ['record', '<span class="rm-recdot"></span>Idea por audio']];
+  var S = [['Default', ''], ['Hover', 'is-hover'], ['Activo', 'is-active'], ['Foco', 'is-focus'], ['Deshab.', 'is-disabled'], ['Cargando', 'is-loading']];
+  var h = '<tr><th></th>' + S.map(function (s) { return '<th><span class="rm-label">' + s[0] + '</span></th>'; }).join('') + '</tr>';
+  V.forEach(function (v) {
+    h += '<tr><td><span class="rm-label" style="color:var(--color-text-3)">' + v[0] + '</span></td>' + S.map(function (s) {
+      var extra = v[0] === 'record' && s[1] === 'is-active' ? ' is-recording' : '';
+      var label = s[1] === 'is-loading' ? '<span class="rm-spin"></span><span>' + (v[0] === 'record' ? 'Subiendo' : 'Guardando') + '</span>' : (extra ? '<span class="rm-recdot"></span>00:42' : v[1]);
+      return '<td><button class="rm-btn rm-btn--' + v[0] + ' ' + s[1] + extra + '"' + (s[1] === 'is-disabled' ? ' disabled' : '') + '>' + label + '</button></td>';
+    }).join('') + '</tr>';
+  });
+  h += '<tr><td><span class="rm-label" style="color:var(--color-text-3)">tamaños</span></td><td colspan="6" style="display:flex;gap:12px;align-items:center"><button class="rm-btn rm-btn--primary rm-btn--sm">Chico</button><button class="rm-btn rm-btn--primary">Normal</button><button class="rm-btn rm-btn--primary rm-btn--lg">Grande</button><button class="rm-iconbtn" aria-label="Más">⋯</button><button class="rm-iconbtn is-hover" aria-label="Cerrar">×</button></td></tr>';
+  document.getElementById('t').innerHTML = h;
+</script>
+</body>
+</html>

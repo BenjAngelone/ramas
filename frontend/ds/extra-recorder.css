@@ -1,0 +1,19 @@
+/* Ramas — extensiones rm-* del grabador. Solo var(--*). */
+:root { --rm-rec-w: 520px; --rm-rec-fs: 12px; --rm-rec-timeslice: 1000ms; --rm-rec-tick: 100ms; --rm-rec-tip-h: 25px; --rm-rec-dim: .35; --rm-rec-sat: .6; }
+#recorder.rm-recorder {
+  position: fixed; left: 50%; bottom: calc(var(--space-8) + var(--rm-rec-tip-h) + var(--space-3)); transform: translateX(-50%); z-index: 70;
+  width: min(var(--rm-rec-w), calc(100vw - 2 * var(--space-4))); box-sizing: border-box;
+}
+#recorder.rm-recorder[hidden] { display: none; }
+
+.rm-recorder__who { display: flex; align-items: center; gap: var(--space-2); font-size: var(--rm-rec-fs); color: var(--color-text-2); }
+.rm-recorder__mid { display: flex; align-items: center; gap: var(--space-5); }
+.rm-recorder__mid .rm-wave { flex: 1; min-width: 0; overflow: hidden; }
+.rm-recorder__dest { padding-top: var(--space-3); border-top: 1px solid var(--color-border-subtle); font-size: var(--rm-rec-fs); color: var(--color-text-2); }
+.rm-recorder__btns { display: flex; gap: var(--space-2); }
+/* Línea de atajos bajo el panel (Esc / Espacio / ↵) */
+.rm-rec-tip { position: fixed; left: 50%; bottom: var(--space-8); transform: translateX(-50%); z-index: 70; height: var(--rm-rec-tip-h); display: flex; align-items: center; gap: var(--space-2); font-size: var(--rm-rec-fs); color: var(--color-text-2); white-space: nowrap; }
+/* Tablero atenuado detrás del grabador */
+#main.rm-main--dim { opacity: var(--rm-rec-dim); filter: saturate(var(--rm-rec-sat)); }
+@media (max-width: 600px) { .rm-rec-tip { display: none; } #recorder.rm-recorder { bottom: var(--space-4); } .rm-recorder__mid { gap: var(--space-3); } }
+@media (prefers-reduced-motion: reduce) { #recorder.rm-recorder .rm-wave i, #recorder.rm-recorder .rm-rec::before { animation: none; } }

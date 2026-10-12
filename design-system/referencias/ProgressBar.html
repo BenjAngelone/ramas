@@ -1,0 +1,22 @@
+<!-- @dsCard group="Métricas" height=170 width=960 subtitle="Avance segmentado: hecho / en curso / bloqueado" -->
+<!doctype html>
+<html data-theme="dark" lang="es">
+<head><meta name="viewport" content="width=960"><link rel="stylesheet" href="../css/ramas-tokens.css"><link rel="stylesheet" href="../css/ramas-components.css"><script src="../js/ramas-templates.js"></script>
+<meta charset="utf-8">
+<title>Barra de progreso</title>
+<style>
+  body { background: var(--color-bg-3); padding: var(--space-6); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="rm-field"><span class="rm-label">Default · 1/6</span><div class="rm-progress"><div class="rm-progress__track"><span class="rm-progress__seg rm-progress__seg--done" style="width:17%"></span><span class="rm-progress__seg rm-progress__seg--doing" style="width:33%"></span></div><div class="rm-progress__meta"><span>17%</span><span>1/6</span></div></div></div>
+  <div class="rm-field"><span class="rm-label">Con bloqueo</span><div class="rm-progress"><div class="rm-progress__track"><span class="rm-progress__seg rm-progress__seg--done" style="width:40%"></span><span class="rm-progress__seg rm-progress__seg--doing" style="width:20%"></span><span class="rm-progress__seg rm-progress__seg--blocked" style="width:20%"></span></div><div class="rm-progress__meta"><span>40%</span><span>2/5</span></div></div></div>
+  <div class="rm-field"><span class="rm-label">Completo</span><div class="rm-progress"><div class="rm-progress__track"><span class="rm-progress__seg rm-progress__seg--done" style="width:100%"></span></div><div class="rm-progress__meta"><span>100%</span><span>3/3</span></div></div></div>
+  <div class="rm-field"><span class="rm-label">Cargando</span><div class="rm-progress is-loading"><div class="rm-progress__track"></div><div class="rm-progress__meta"><span>—</span><span>—</span></div></div></div>
+  <div class="rm-field"><span class="rm-label">Vacío · sin ramas</span><div class="rm-progress"><div class="rm-progress__track"></div><div class="rm-progress__meta"><span class="rm-faint">sin ramas</span><span>0/0</span></div></div></div>
+  <div class="rm-field" style="grid-column: span 3"><span class="rm-label">Barra simple (ranking de tiempo)</span><div class="rm-bar" style="--_c:var(--color-status-doing)"><i style="width:72%"></i></div></div>
+</div>
+</body>
+</html>

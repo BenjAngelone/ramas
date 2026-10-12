@@ -1,0 +1,88 @@
+/* Ramas — extensiones rm-* de modales, onboarding y agentes. Solo var(--*). */
+:root {
+  --rm-modal-w: 560px; --rm-modal-w-sm: 480px; --rm-modal-w-lg: 720px; --rm-onb-w-who: 520px;
+  --rm-scrim-blur: 3px; --rm-dot-w: 18px; --rm-dot-h: 3px; --rm-dot-glow: 6px; --rm-key-h: 48px; --rm-animal-sz: 44px;
+  --rm-fs-xs: 11px; --rm-lh-xs: 14px; --rm-fs-sm: 12px; --rm-fs-md: 13px; --rm-lh-md: 19px; --rm-fs-name: 14px;
+  --rm-fs-key: 16px; --rm-fs-lg: 17px; --rm-fs-h1: 32px; --rm-lh-h1: 38px; --rm-fs-h1-sm: 26px; --rm-lh-h1-sm: 32px;
+  --rm-copied-ms: 2000ms; --rm-onb-w: 460px; --rm-lh-lede: 21px;
+}
+
+/* Host del overlay (#modal.modal-wrap): capa fija que se muestra con .on. Antes lo daba style.css (eliminado en T13). */
+#modal.modal-wrap { position: fixed; inset: 0; z-index: 50; display: none; place-items: center; }
+#modal.modal-wrap.on { display: grid; }
+/* Overlay: scrim con blur */
+#modal.modal-wrap { background: var(--color-scrim); -webkit-backdrop-filter: blur(var(--rm-scrim-blur)); backdrop-filter: blur(var(--rm-scrim-blur)); padding: var(--space-4); }
+/* Host del diálogo: transparente; la caja visible es .rm-modal (evita doble marco). Conserva .modal por detail.js */
+#modal > .modal { background: transparent; padding: 0; box-shadow: none; border-radius: 0; overflow: visible; max-height: calc(100vh - 2 * var(--space-4)); width: min(var(--rm-modal-w), 100%); display: flex; flex-direction: column; }
+#modal > .modal:has(> .rm-dlg) { width: min(var(--rm-modal-w-sm), 100%); }
+#modal > .modal:has(> .rm-modal--wide) { width: min(var(--rm-modal-w-lg), 100%); }
+#modal > .modal > .rm-modal { min-height: 0; width: 100%; }
+#modal .rm-modal h2 { margin: 0; letter-spacing: normal; }
+#modal .rm-modal p { margin: 0; color: var(--color-text-2); }
+#modal .rm-modal input.rm-input, #modal .rm-modal textarea.rm-textarea {
+  box-sizing: border-box; margin: 0; width: 100%; background: var(--color-bg-4); color: var(--color-text-1);
+  border: 1px solid var(--color-border-control); border-radius: var(--radius-sm); padding: 0 var(--space-3);
+}
+#modal .rm-modal textarea.rm-textarea { padding: var(--space-2) var(--space-3); }
+#modal .rm-modal input.rm-input:focus, #modal .rm-modal textarea.rm-textarea:focus { border-color: var(--color-accent); }
+#modal .rm-modal input.rm-input.is-error { border-color: var(--color-status-blocked); box-shadow: var(--glow-blocked); }
+.rm-md__p { font-size: var(--rm-fs-md); line-height: var(--rm-lh-md); }
+.rm-modal__body { overflow: auto; }
+
+/* Onboarding */
+.rm-onb { width: 100%; background: var(--color-glass-2); }
+.rm-onb--who { width: 100%; }
+#modal > .modal:has(> .rm-onb) { width: min(var(--rm-onb-w), 100%); }
+#modal > .modal:has(> .rm-onb--who) { width: min(var(--rm-onb-w-who), 100%); }
+.rm-onb__team { display: flex; align-items: center; gap: var(--space-2); font-size: var(--rm-fs-sm); color: var(--color-text-3); }
+.rm-onb__team b { color: var(--color-text-1); font-weight: 600; }
+#modal .rm-modal .rm-modal__lede { margin-top: var(--space-1); font-size: var(--rm-fs-md); line-height: var(--rm-lh-md); }
+.rm-onb__body { padding: var(--space-8); gap: var(--space-5); }
+.rm-onb__brand { display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 700; font-size: var(--rm-fs-lg); }
+.rm-onb__h { font-size: var(--rm-fs-h1); line-height: var(--rm-lh-h1); font-weight: 600; letter-spacing: -.02em; }
+.rm-onb__p { margin-top: var(--space-2); }
+.rm-onb__step { display: flex; align-items: center; gap: var(--space-2); }
+.rm-onb__dots { display: flex; gap: var(--space-1); }
+.rm-onb__dots i { width: var(--rm-dot-w); height: var(--rm-dot-h); border-radius: var(--radius-xs); background: var(--color-border-strong); }
+.rm-onb__dots i.on { background: var(--color-accent); box-shadow: 0 0 var(--rm-dot-glow) var(--color-glow); }
+#modal .rm-modal input.rm-onb__key { height: var(--rm-key-h); font-size: var(--rm-fs-key); text-align: center; font-family: var(--font-mono); letter-spacing: .12em; }
+.rm-onb__animals { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+.rm-onb__animals .rm-avatar-pick { padding: var(--space-3) var(--space-1); }
+.rm-onb__animals .rm-avatar { --_sz: var(--rm-animal-sz); }
+.rm-avatar-pick.is-selected { border-color: var(--color-accent); box-shadow: var(--glow-accent); color: var(--color-text-1); }
+.rm-avatar-pick.is-taken { cursor: not-allowed; transform: none; }
+.rm-onb__lbl { font-size: var(--rm-fs-xs); line-height: var(--rm-lh-xs); }
+.rm-onb__people { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+.rm-onb__person { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1); border-radius: var(--radius-pill); border: 1px solid var(--color-border-default); background: var(--color-bg-3); color: var(--color-text-1); cursor: pointer; font-size: var(--rm-fs-md); }
+.rm-onb__pwrap { display: inline-flex; align-items: center; gap: var(--space-1); }
+.rm-onb__person:hover { border-color: var(--color-border-strong); background: var(--color-bg-4); }
+.rm-onb__person:focus-visible, .rm-avatar-pick:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+.rm-onb__actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+.rm-onb__actions .rm-btn--primary { flex: 1; }
+.rm-onb__actions .rm-btn .rm-avatar { background: none; box-shadow: none; }
+
+/* Agentes */
+.rm-agents { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+.rm-agentrow { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-3); align-items: center; padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--color-border-default); background: var(--color-bg-3); min-width: 0; }
+.rm-agentrow small { display: block; font-size: var(--rm-fs-sm); color: var(--color-text-3); overflow: hidden; text-overflow: ellipsis; }
+.rm-agentrow__name { font-size: var(--rm-fs-name); }
+.rm-stepn { display: flex; gap: var(--space-2); align-items: baseline; font-size: var(--rm-fs-md); color: var(--color-text-2); margin-bottom: var(--space-2); }
+.rm-stepn b { font-family: var(--font-mono); font-size: var(--rm-fs-xs); color: var(--color-accent); }
+.rm-stepn strong { color: var(--color-text-1); font-weight: 600; }
+@media (max-width: 720px) { .rm-agents { grid-template-columns: 1fr; } .rm-onb__body { padding: var(--space-5); } .rm-onb__h { font-size: var(--rm-fs-h1-sm); line-height: var(--rm-lh-h1-sm); } }
+@media (prefers-reduced-motion: reduce) { #modal .rm-modal { animation: none; } .rm-avatar-pick { transition: none; } }
+
+/* Desborde: los hijos de la grilla pueden encogerse y el bloque de código scrollea por dentro */
+#modal > .modal > .rm-modal { max-height: calc(100vh - 2 * var(--space-4)); display: flex; flex-direction: column; }
+#modal .rm-modal__body { min-height: 0; }
+#modal .rm-modal__body > *, #modal .rm-code { min-width: 0; }
+#modal .rm-code pre { overflow-x: auto; }
+.rm-agents { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.rm-agentrow .rm-id { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.rm-agentrow { grid-template-columns: auto minmax(0, 1fr); }
+.rm-agentrow .rm-id { grid-column: 1 / -1; }
+
+/* Cabecera de modalShell: eyebrow/título/bajada con el ritmo de la referencia (head 106px con bajada) */
+.rm-modal__eyebrow { line-height: var(--rm-lh-lede); }
+#modal .rm-modal .rm-modal__eyebrow + .rm-modal__title { margin-top: var(--space-1); }
+#modal .rm-modal .rm-modal__lede { line-height: var(--rm-lh-lede); }
